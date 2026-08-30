@@ -48,6 +48,26 @@ export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
     return `${Math.floor(diffHours / 24)}d ago`;
   };
 
+  const getReignTimeStr = (item: HistoryItem) => {
+    const originalIndex = history.findIndex(h => h.id === item.id);
+    if (originalIndex <= 0) return 'LIVE';
+    
+    // The item that overthrew this one is at originalIndex - 1 (since array is newest-first)
+    const currentCreatedAt = new Date(item.created_at).getTime();
+    const overthrownAt = new Date(history[originalIndex - 1].created_at).getTime();
+    const diff = overthrownAt - currentCreatedAt;
+    
+    if (diff < 0) return '0s';
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  };
+
   return (
     <div className="bg-black/90 border border-terminal-green/40 font-mono text-xs overflow-hidden max-w-full">
       {/* Tab Header */}
@@ -114,11 +134,15 @@ export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
                         <span className="text-[9px] sm:text-[10px] text-terminal-green/40 shrink-0">
                           {formatTimeAgo(item.created_at)}
                           <span className="mx-1 opacity-50">•</span>
+                          <span className="text-yellow-500/80">Reigned: {getReignTimeStr(item)}</span>
+                          <span className="mx-1 opacity-50">•</span>
                           {item.clicks || 0} clicks
                         </span>
                       )}
                       {tab === 'leaderboard' && (
                         <span className="text-[9px] sm:text-[10px] text-terminal-green/40 shrink-0 ml-1">
+                          <span className="mx-1 opacity-50">•</span>
+                          <span className="text-yellow-500/80">Reigned: {getReignTimeStr(item)}</span>
                           <span className="mx-1 opacity-50">•</span>
                           {item.clicks || 0} clicks
                         </span>
