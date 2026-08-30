@@ -313,7 +313,7 @@ function HijackAppContent() {
 
 
           {/* Central Focal Champion Box */}
-          <div className={`relative p-4 sm:p-6 md:p-8 bg-black/95 border-2 transition-all flex flex-col items-center text-center space-y-4 sm:space-y-5 glow-box ${
+          <div className={`relative p-3 sm:p-6 md:p-8 bg-black/95 border-2 transition-all flex flex-col items-center text-center space-y-4 sm:space-y-5 glow-box ${
             isTakeoverActive ? 'border-glitch-red' : 'border-terminal-green/80'
           }`}>
             {/* Champion Badge */}
@@ -341,7 +341,7 @@ function HijackAppContent() {
             </div>
 
             {/* Background Site Indicator */}
-            <div className="flex items-center gap-1 text-[9px] sm:text-[10px] text-terminal-green/80 font-mono bg-terminal-green/10 px-2 sm:px-2.5 py-1 border border-terminal-green/30 max-w-full truncate">
+            <div className="hidden sm:flex items-center gap-1 text-[9px] sm:text-[10px] text-terminal-green/80 font-mono bg-terminal-green/10 px-2 sm:px-2.5 py-1 border border-terminal-green/30 max-w-full truncate">
               <Eye className="h-3 w-3 text-glitch-blue shrink-0" />
               <span className="truncate">PHANTOM BACKGROUND PROJECTING: <span className="text-yellow-400 font-bold">{activeLink.url}</span></span>
             </div>
@@ -373,7 +373,7 @@ function HijackAppContent() {
             <div className="w-full pt-2 sm:pt-3">
               <Button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-terminal-green text-black hover:bg-terminal-green/90 font-black text-sm sm:text-base uppercase tracking-widest py-5 sm:py-6 rounded-none crt-flicker shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-transform active:scale-[0.98]"
+                className="w-full bg-terminal-green text-black hover:bg-terminal-green/90 font-black text-sm sm:text-base uppercase tracking-widest py-4 sm:py-6 rounded-none crt-flicker shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-transform active:scale-[0.98]"
               >
                 ⚡ HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
               </Button>
