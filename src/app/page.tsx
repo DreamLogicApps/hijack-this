@@ -392,7 +392,7 @@ function HijackAppContent() {
           </div>
 
           {/* History Feed & Leaderboard Tabs */}
-          <HistoryFeed history={history} onTrackClick={handleTrackClick} />
+          <HistoryFeed history={history} onTrackClick={handleTrackClick} activeLinkId={activeLink?.id} />
 
         </div>
       </div>

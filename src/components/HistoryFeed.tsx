@@ -15,12 +15,13 @@ export interface HistoryItem {
 
 interface HistoryFeedProps {
   history: HistoryItem[];
-  onTrackClick?: (type: 'history', id: string) => void;
+  onTrackClick?: (type: 'history' | 'current', id: string) => void;
+  activeLinkId?: string;
 }
 
 const ITEMS_PER_PAGE = 5;
 
-export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
+export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeedProps) {
   const [tab, setTab] = useState<'activity' | 'leaderboard'>('activity');
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
@@ -154,7 +155,11 @@ export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
                       rel="noopener noreferrer"
                       onClick={() => {
                         const isCurrentActive = history.length > 0 && item.id === history[0].id;
-                        onTrackClick?.(isCurrentActive ? 'current' : 'history', item.id);
+                        if (isCurrentActive && activeLinkId) {
+                          onTrackClick?.('current', activeLinkId);
+                        } else {
+                          onTrackClick?.('history', item.id);
+                        }
                       }}
                       className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1 max-w-full mt-0.5"
                     >
