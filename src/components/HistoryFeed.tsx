@@ -152,7 +152,10 @@ export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => onTrackClick?.('history', item.id)}
+                      onClick={() => {
+                        const isCurrentActive = history.length > 0 && item.id === history[0].id;
+                        onTrackClick?.(isCurrentActive ? 'current' : 'history', item.id);
+                      }}
                       className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1 max-w-full mt-0.5"
                     >
                       <span className="truncate max-w-[140px] sm:max-w-[220px]">{item.label}</span>
