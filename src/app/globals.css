@@ -157,3 +157,9 @@
   50% { opacity: 1; }
   100% { opacity: 0.95; }
 }
+
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}

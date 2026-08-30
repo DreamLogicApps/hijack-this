@@ -373,16 +373,13 @@ function HijackAppContent() {
             <div className="w-full pt-4 sm:pt-5">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full relative group overflow-hidden bg-black text-terminal-green hover:text-black hover:bg-terminal-green font-black text-base sm:text-lg md:text-xl uppercase tracking-widest py-4 sm:py-6 border-2 border-terminal-green shadow-[0_0_20px_rgba(57,255,20,0.2)] hover:shadow-[0_0_40px_rgba(57,255,20,0.8)] transition-all duration-300 active:scale-[0.98]"
+                className="w-full relative group overflow-hidden bg-terminal-green text-black font-black text-base sm:text-lg md:text-xl uppercase tracking-widest py-4 sm:py-6 shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_40px_rgba(57,255,20,0.8)] transition-all duration-300 active:scale-[0.98]"
               >
-                {/* Diagonal Hacker Stripes Background */}
-                <div className="absolute inset-0 opacity-20 group-hover:opacity-10 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#39ff14_10px,#39ff14_20px)] transition-opacity duration-300"></div>
-                
-                {/* Hover Glitch Flash */}
-                <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 group-hover:animate-pulse transition-opacity duration-75"></div>
+                {/* Glass Shine Effect */}
+                <div className="absolute top-0 -left-[100%] w-1/2 h-full skew-x-[45deg] bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:animate-[shine_1s_ease-in-out]"></div>
 
-                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-md">
-                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-terminal-green group-hover:text-black group-hover:animate-bounce transition-colors" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
                   HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
                 </span>
               </button>
