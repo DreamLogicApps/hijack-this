@@ -20,6 +20,16 @@ export async function POST(req: Request) {
     // Minimum price required is current_price + 10%
     const minRequiredPrice = Number((currentLink.hijack_price * 1.10).toFixed(2));
     
+    // NSFW & Malicious URL filter
+    const bannedKeywords = ['nsfw', 'porn', 'xxx', 'sex', 'casino', 'gamble', 'betting', 'scam', 'phishing', 'malware'];
+    const lowerUrl = newUrl.toLowerCase();
+    const lowerLabel = newLabel.toLowerCase();
+    const lowerName = newName.toLowerCase();
+    
+    if (bannedKeywords.some(kw => lowerUrl.includes(kw) || lowerLabel.includes(kw) || lowerName.includes(kw))) {
+      return NextResponse.json({ error: 'NSFW or restricted content is not allowed.' }, { status: 400 });
+    }
+
     // User can bid customPrice if higher or equal to minRequiredPrice
     let finalPrice = customPrice && Number(customPrice) >= minRequiredPrice
       ? Number(Number(customPrice).toFixed(2))
