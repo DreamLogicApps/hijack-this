@@ -202,7 +202,7 @@ function HijackAppContent() {
 
   const handleShareX = () => {
     if (!activeLink) return;
-    const text = encodeURIComponent(`🔥 ${activeLink.owner_name} is currently holding the #1 link on HijackThis for $${activeLink.hijack_price.toFixed(2)}!\n\nCan you outbid them?`);
+    const text = encodeURIComponent(`🚨 SYSTEM OVERRIDE 🚨\n\n${activeLink.owner_name} just seized the #1 spot on HijackThis for $${activeLink.hijack_price.toFixed(2)}! 👑💰\n\nThey are currently siphoning all the site traffic. Do you have what it takes to overthrow them? 🗡️💻\n\n#HijackThis #KingOfTheHill`);
     const shareUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(window.location.href)}`;
     window.open(shareUrl, '_blank');
   };
