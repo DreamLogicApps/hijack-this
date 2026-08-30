@@ -40,6 +40,7 @@ function HijackAppContent() {
   const [copied, setCopied] = useState(false);
   const [isTakeoverActive, setIsTakeoverActive] = useState(false);
   const [takeoverInfo, setTakeoverInfo] = useState<{ owner: string; price: number } | null>(null);
+  const currentPriceRef = useRef<number>(0);
 
   const triggerTakeoverAnimation = (owner: string, price: number) => {
     setTakeoverInfo({ owner, price });
@@ -70,6 +71,7 @@ function HijackAppContent() {
       const link = await Promise.race([dbFetch(), timeoutPromise]) as LinkData;
       if (link) {
         setLinkData(link);
+        currentPriceRef.current = link.hijack_price;
       }
 
       // Fetch history
@@ -149,7 +151,11 @@ function HijackAppContent() {
             const newData = payload.new as LinkData;
             if (newData) {
               setLinkData(newData);
-              triggerTakeoverAnimation(newData.owner_name, newData.hijack_price);
+              // Only trigger animation if the price actually increased (meaning a new takeover, not just a click)
+              if (newData.hijack_price > currentPriceRef.current) {
+                currentPriceRef.current = newData.hijack_price;
+                triggerTakeoverAnimation(newData.owner_name, newData.hijack_price);
+              }
             }
           }
         )
