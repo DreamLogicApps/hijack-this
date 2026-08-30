@@ -160,10 +160,14 @@ function HijackAppContent() {
         .channel('history-changes')
         .on(
           'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'hijack_history' },
+          { event: '*', schema: 'public', table: 'hijack_history' },
           (payload) => {
-            if (payload.new) {
+            if (payload.eventType === 'INSERT' && payload.new) {
               setHistory((prev) => [payload.new as HistoryItem, ...prev.slice(0, 19)]);
+            } else if (payload.eventType === 'UPDATE' && payload.new) {
+              setHistory((prev) => 
+                prev.map(item => item.id === payload.new.id ? (payload.new as HistoryItem) : item)
+              );
             }
           }
         )
