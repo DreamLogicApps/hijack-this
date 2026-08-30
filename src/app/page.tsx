@@ -312,16 +312,20 @@ function HijackAppContent() {
             </div>
 
             {/* The Focal Point: ONE Glowing Functioning Stylized Link */}
-            <div className="py-2 sm:py-4 w-full">
+            <div className="py-2 sm:py-4 w-full flex flex-col items-center gap-2">
               <a
                 href={activeLink.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => activeLink.id && handleTrackClick('current', activeLink.id)}
                 className="group inline-flex items-center justify-center gap-1.5 text-xl sm:text-3xl md:text-4xl font-black text-terminal-green hover:text-white transition-all duration-300 glow-text underline decoration-terminal-green decoration-2 underline-offset-8 break-all max-w-full"
               >
                 <span className="truncate max-w-[260px] sm:max-w-md">{activeLink.label}</span>
                 <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
               </a>
+              <div className="text-sm font-bold text-glitch-red flex items-center gap-1 animate-pulse">
+                🔥 {activeLink.clicks || 0} clicks
+              </div>
             </div>
 
             {/* Background Site Indicator */}
