@@ -333,10 +333,9 @@ function HijackAppContent() {
                 <span className="truncate max-w-[260px] sm:max-w-md">{activeLink.label}</span>
                 <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
               </a>
-              <div className="mt-3 mb-1 flex items-center gap-2 text-[10px] sm:text-xs font-mono text-terminal-green/70 bg-terminal-green/5 border border-terminal-green/20 px-3 py-1.5 uppercase tracking-widest shadow-[inset_0_0_10px_rgba(0,255,65,0.05)]">
+              <div className="mt-3 mb-1 flex items-center gap-1.5 text-[10px] sm:text-xs font-mono text-terminal-green/80 bg-terminal-green/10 border border-terminal-green/20 px-2.5 py-1 uppercase tracking-widest shadow-[inset_0_0_10px_rgba(0,255,65,0.05)]">
                 <span className="w-1.5 h-1.5 bg-glitch-red animate-ping rounded-full inline-block"></span>
-                <span>TRAFFIC LOGS:</span>
-                <span className="font-bold text-terminal-green text-[11px] sm:text-sm ml-1 glow-text">[{activeLink.clicks || 0}] CLICKS</span>
+                <span className="font-bold text-terminal-green glow-text">{activeLink.clicks || 0} CLICKS</span>
               </div>
             </div>
 
