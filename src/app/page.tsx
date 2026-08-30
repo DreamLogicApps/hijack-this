@@ -370,17 +370,20 @@ function HijackAppContent() {
             </div>
 
             {/* Primary Call to Action */}
-            <div className="w-full pt-4 sm:pt-5">
+            <div className="w-full pt-4 sm:pt-6 pb-2">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full relative group overflow-hidden bg-terminal-green text-black font-black text-base sm:text-lg md:text-xl uppercase tracking-widest py-4 sm:py-6 shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_40px_rgba(57,255,20,0.8)] transition-all duration-300 active:scale-[0.98]"
+                className="w-full relative group overflow-hidden rounded-xl bg-gradient-to-b from-[#4dff2a] to-[#209908] text-black font-black text-lg sm:text-xl uppercase tracking-widest py-4 sm:py-5 border-b-[6px] sm:border-b-8 border-[#125c04] active:border-b-0 active:translate-y-[6px] sm:active:translate-y-[8px] transition-all duration-75 shadow-[0_10px_30px_rgba(57,255,20,0.4)] hover:shadow-[0_15px_40px_rgba(57,255,20,0.6)]"
               >
-                {/* Glass Shine Effect */}
-                <div className="absolute top-0 -left-[100%] w-1/2 h-full skew-x-[45deg] bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:animate-[shine_1s_ease-in-out]"></div>
+                {/* Highlight/Glare effect for 3D realism */}
+                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/40 to-transparent rounded-t-xl pointer-events-none"></div>
+                
+                {/* Hover Brightness */}
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none"></div>
 
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
-                  HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
+                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-sm">
+                  <Flame className="w-6 h-6 sm:w-7 sm:h-7 animate-pulse text-red-600 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]" />
+                  SEIZE THE CROWN [ ${(activeLink.hijack_price * 1.10).toFixed(2)}+ ]
                 </span>
               </button>
             </div>
