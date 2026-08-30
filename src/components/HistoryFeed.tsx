@@ -24,7 +24,8 @@ const ITEMS_PER_PAGE = 5;
 export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeedProps) {
   const [tab, setTab] = useState<'activity' | 'leaderboard'>('activity');
   const [leaderboardSort, setLeaderboardSort] = useState<'bid' | 'traffic' | 'reign'>('bid');
-  const [activityDateFilter, setActivityDateFilter] = useState<'all' | 'today' | 'week' | 'month' | 'year'>('all');
+  const [activityDateFilter, setActivityDateFilter] = useState<'all' | 'custom'>('all');
+  const [customDate, setCustomDate] = useState('');
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
 
@@ -57,12 +58,11 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
 
   const filteredHistory = history.filter(item => {
     if (activityDateFilter === 'all') return true;
-    const itemDate = new Date(item.created_at).getTime();
-    const now = Date.now();
-    if (activityDateFilter === 'today') return (now - itemDate) <= 24 * 60 * 60 * 1000;
-    if (activityDateFilter === 'week') return (now - itemDate) <= 7 * 24 * 60 * 60 * 1000;
-    if (activityDateFilter === 'month') return (now - itemDate) <= 30 * 24 * 60 * 60 * 1000;
-    if (activityDateFilter === 'year') return (now - itemDate) <= 365 * 24 * 60 * 60 * 1000;
+    if (activityDateFilter === 'custom' && customDate) {
+      // Get YYYY-MM-DD in local time
+      const itemDateStr = new Date(item.created_at).toLocaleDateString('en-CA');
+      return itemDateStr === customDate;
+    }
     return true;
   });
 
@@ -121,25 +121,43 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
 
       {/* Activity Filters */}
       {tab === 'activity' && (
-        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-1 sm:gap-2 overflow-x-auto">
+        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-2 overflow-x-auto">
            <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-1 uppercase font-bold tracking-widest hidden sm:inline shrink-0">FILTER:</span>
            
-           {(['all', 'today', 'week', 'month', 'year'] as const).map((opt) => (
-             <button
-               key={opt}
-               onClick={() => {
-                 setActivityDateFilter(opt);
-                 setActivityPage(1); // reset page on filter change
-               }}
-               className={`text-[9px] sm:text-[10px] uppercase font-bold px-2 sm:px-3 py-1 transition-colors border shrink-0 ${
-                 activityDateFilter === opt 
-                   ? 'bg-terminal-green/20 text-terminal-green border-terminal-green' 
-                   : 'bg-black text-terminal-green/40 border-terminal-green/20 hover:text-terminal-green hover:border-terminal-green/50 hover:bg-terminal-green/5'
-               }`}
-             >
-               {opt === 'all' ? 'All Time' : opt === 'today' ? '24h' : opt === 'week' ? '7 Days' : opt === 'month' ? '30 Days' : '365 Days'}
-             </button>
-           ))}
+           <button
+             onClick={() => {
+               setActivityDateFilter('all');
+               setCustomDate('');
+               setActivityPage(1);
+             }}
+             className={`text-[9px] sm:text-[10px] uppercase font-bold px-2 sm:px-3 py-1 transition-colors border shrink-0 ${
+               activityDateFilter === 'all' 
+                 ? 'bg-terminal-green/20 text-terminal-green border-terminal-green' 
+                 : 'bg-black text-terminal-green/40 border-terminal-green/20 hover:text-terminal-green hover:border-terminal-green/50 hover:bg-terminal-green/5'
+             }`}
+           >
+             ALL TIME
+           </button>
+
+           <input 
+             type="date"
+             value={customDate}
+             onChange={(e) => {
+               setCustomDate(e.target.value);
+               if (e.target.value) {
+                 setActivityDateFilter('custom');
+                 setActivityPage(1);
+               } else {
+                 setActivityDateFilter('all');
+               }
+             }}
+             className={`bg-black border text-[9px] sm:text-[10px] uppercase font-bold px-2 py-0.5 outline-none transition-colors shrink-0 h-[26px] sm:h-[28px] ${
+               activityDateFilter === 'custom'
+                 ? 'border-terminal-green text-terminal-green bg-terminal-green/20'
+                 : 'border-terminal-green/20 text-terminal-green/40 hover:text-terminal-green hover:border-terminal-green/50'
+             }`}
+             style={{ colorScheme: 'dark' }}
+           />
         </div>
       )}
 
