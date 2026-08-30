@@ -84,6 +84,7 @@ export async function POST(req: Request) {
         label: newLabel,
         owner_name: newName,
         hijack_price: finalPrice,
+        clicks: 0,
         updated_at: new Date().toISOString(),
       })
       .eq('id', targetId);
