@@ -9,7 +9,7 @@ import { HistoryFeed, HistoryItem } from '@/components/HistoryFeed';
 import { CyberQRModal } from '@/components/CyberQRModal';
 import { MatrixRain } from '@/components/MatrixRain';
 import { Button } from '@/components/ui/button';
-import { Loader2, ExternalLink, Copy, Check, Twitter, Flame, AlertTriangle, Eye, QrCode } from 'lucide-react';
+import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, Eye, QrCode } from 'lucide-react';
 
 interface LinkData {
   id: string;
@@ -364,7 +364,7 @@ function HijackAppContent() {
                 onClick={handleShareX}
                 className="px-2.5 py-1.5 bg-terminal-green/10 hover:bg-terminal-green/20 text-terminal-green border border-terminal-green/30 flex items-center gap-1 transition-colors"
               >
-                <Twitter className="h-3.5 w-3.5" />
+                <span className="font-bold leading-none text-[13px] -mt-[1px]">𝕏</span>
                 POST
               </button>
             </div>
