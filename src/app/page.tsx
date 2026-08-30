@@ -8,7 +8,7 @@ import { StatsHeader } from '@/components/StatsHeader';
 import { HistoryFeed, HistoryItem } from '@/components/HistoryFeed';
 import { CyberQRModal } from '@/components/CyberQRModal';
 import { MatrixRain } from '@/components/MatrixRain';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, Eye, QrCode } from 'lucide-react';
 
 interface LinkData {
@@ -370,13 +370,22 @@ function HijackAppContent() {
             </div>
 
             {/* Primary Call to Action */}
-            <div className="w-full pt-2 sm:pt-3">
-              <Button
+            <div className="w-full pt-4 sm:pt-5">
+              <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-terminal-green text-black hover:bg-terminal-green/90 font-black text-sm sm:text-base uppercase tracking-widest py-4 sm:py-6 rounded-none crt-flicker shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-transform active:scale-[0.98]"
+                className="w-full relative group overflow-hidden bg-black text-terminal-green hover:text-black hover:bg-terminal-green font-black text-base sm:text-lg md:text-xl uppercase tracking-widest py-4 sm:py-6 border-2 border-terminal-green shadow-[0_0_20px_rgba(57,255,20,0.2)] hover:shadow-[0_0_40px_rgba(57,255,20,0.8)] transition-all duration-300 active:scale-[0.98]"
               >
-                ⚡ HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
-              </Button>
+                {/* Diagonal Hacker Stripes Background */}
+                <div className="absolute inset-0 opacity-20 group-hover:opacity-10 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#39ff14_10px,#39ff14_20px)] transition-opacity duration-300"></div>
+                
+                {/* Hover Glitch Flash */}
+                <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 group-hover:animate-pulse transition-opacity duration-75"></div>
+
+                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-md">
+                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-terminal-green group-hover:text-black group-hover:animate-bounce transition-colors" />
+                  HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
+                </span>
+              </button>
             </div>
           </div>
 
