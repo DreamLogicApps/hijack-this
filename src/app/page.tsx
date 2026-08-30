@@ -373,15 +373,18 @@ function HijackAppContent() {
             <div className="w-full pt-5 pb-2 flex justify-center">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full max-w-xs sm:max-w-sm relative overflow-hidden flex items-center justify-center gap-2 rounded-full bg-terminal-green px-6 py-3.5 text-black font-bold text-sm sm:text-base hover:bg-[#32e612] animate-breathe-glow transition-all duration-300 active:scale-95"
+                className="w-full max-w-xs sm:max-w-sm relative overflow-hidden group flex items-center justify-center gap-2 rounded-full bg-terminal-green px-6 py-3.5 text-black font-bold text-sm sm:text-base animate-breathe-glow transition-all duration-300 active:scale-95"
               >
+                {/* Hover Loading Fill */}
+                <div className="absolute top-0 left-0 h-full w-0 bg-white group-hover:w-full transition-all duration-300 ease-out z-0"></div>
+
                 {/* Auto Sweeping Glass Highlight */}
-                <div className="absolute inset-0 w-full h-full pointer-events-none">
+                <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
                   <div className="absolute top-0 left-0 h-full w-[40px] bg-white/40 mix-blend-overlay blur-[2px] animate-[sweep_4s_infinite_ease-in-out]"></div>
                 </div>
 
-                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-sm">
-                  <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff0000] drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]" />
+                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-sm transition-colors duration-300">
+                  <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff0000] drop-shadow-[0_0_2px_rgba(255,255,255,0.8)] group-hover:scale-110 transition-transform duration-300" />
                   HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
                 </span>
               </button>
