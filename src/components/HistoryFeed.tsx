@@ -9,6 +9,7 @@ export interface HistoryItem {
   label: string;
   owner_name: string;
   price_paid: number;
+  clicks?: number;
   created_at: string;
 }
 
