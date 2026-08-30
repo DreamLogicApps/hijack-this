@@ -121,7 +121,7 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
 
       {/* Activity Filters */}
       {tab === 'activity' && (
-        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-2 overflow-x-auto">
+        <div className="flex items-center justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-2 overflow-x-auto">
            <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-1 uppercase font-bold tracking-widest hidden sm:inline shrink-0">FILTER:</span>
            
            <button
@@ -163,7 +163,7 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
 
       {/* Leaderboard Filters */}
       {tab === 'leaderboard' && (
-        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-1 sm:gap-2 overflow-x-auto">
+        <div className="flex items-center justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-1 sm:gap-2 overflow-x-auto">
            <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-1 uppercase font-bold tracking-widest hidden sm:inline shrink-0">SORT:</span>
            
            {(['bid', 'traffic', 'reign'] as const).map((opt) => (
