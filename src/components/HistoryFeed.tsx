@@ -24,6 +24,7 @@ const ITEMS_PER_PAGE = 5;
 export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeedProps) {
   const [tab, setTab] = useState<'activity' | 'leaderboard'>('activity');
   const [leaderboardSort, setLeaderboardSort] = useState<'bid' | 'traffic' | 'reign'>('bid');
+  const [activityDateFilter, setActivityDateFilter] = useState<'all' | 'today' | 'week'>('all');
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
 
@@ -54,6 +55,15 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
     return `${s}s`;
   };
 
+  const filteredHistory = history.filter(item => {
+    if (activityDateFilter === 'all') return true;
+    const itemDate = new Date(item.created_at).getTime();
+    const now = Date.now();
+    if (activityDateFilter === 'today') return (now - itemDate) <= 24 * 60 * 60 * 1000;
+    if (activityDateFilter === 'week') return (now - itemDate) <= 7 * 24 * 60 * 60 * 1000;
+    return true;
+  });
+
   // Sorted based on selected filter
   const leaderboard = [...history].sort((a, b) => {
     if (leaderboardSort === 'traffic') return (b.clicks || 0) - (a.clicks || 0);
@@ -61,7 +71,7 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
     return b.price_paid - a.price_paid; // default 'bid'
   });
 
-  const activeList = tab === 'activity' ? history : leaderboard;
+  const activeList = tab === 'activity' ? filteredHistory : leaderboard;
   const currentPage = tab === 'activity' ? activityPage : leaderboardPage;
   const setPage = tab === 'activity' ? setActivityPage : setLeaderboardPage;
 
@@ -106,6 +116,30 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
           <Trophy className="h-3.5 w-3.5 text-yellow-400 shrink-0" /> <span className="truncate">Leaderboard ({leaderboard.length})</span>
         </button>
       </div>
+
+      {/* Activity Filters */}
+      {tab === 'activity' && (
+        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-1 sm:gap-2 overflow-x-auto">
+           <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-1 uppercase font-bold tracking-widest hidden sm:inline shrink-0">FILTER:</span>
+           
+           {(['all', 'today', 'week'] as const).map((opt) => (
+             <button
+               key={opt}
+               onClick={() => {
+                 setActivityDateFilter(opt);
+                 setActivityPage(1); // reset page on filter change
+               }}
+               className={`text-[9px] sm:text-[10px] uppercase font-bold px-2 sm:px-3 py-1 transition-colors border shrink-0 ${
+                 activityDateFilter === opt 
+                   ? 'bg-terminal-green/20 text-terminal-green border-terminal-green' 
+                   : 'bg-black text-terminal-green/40 border-terminal-green/20 hover:text-terminal-green hover:border-terminal-green/50 hover:bg-terminal-green/5'
+               }`}
+             >
+               {opt === 'all' ? 'All Time' : opt === 'today' ? 'Last 24h' : 'Last 7 Days'}
+             </button>
+           ))}
+        </div>
+      )}
 
       {/* Leaderboard Filters */}
       {tab === 'leaderboard' && (
