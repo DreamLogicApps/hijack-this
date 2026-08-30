@@ -23,11 +23,43 @@ const ITEMS_PER_PAGE = 5;
 
 export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeedProps) {
   const [tab, setTab] = useState<'activity' | 'leaderboard'>('activity');
+  const [leaderboardSort, setLeaderboardSort] = useState<'bid' | 'traffic' | 'reign'>('bid');
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
 
-  // Sorted by highest paid for leaderboard
-  const leaderboard = [...history].sort((a, b) => b.price_paid - a.price_paid);
+  const getReignTimeMs = (item: HistoryItem) => {
+    const originalIndex = history.findIndex(h => h.id === item.id);
+    if (originalIndex < 0) return 0;
+    if (originalIndex === 0) {
+      return Date.now() - new Date(item.created_at).getTime();
+    }
+    const currentCreatedAt = new Date(item.created_at).getTime();
+    const overthrownAt = new Date(history[originalIndex - 1].created_at).getTime();
+    return Math.max(0, overthrownAt - currentCreatedAt);
+  };
+
+  const getReignTimeStr = (item: HistoryItem) => {
+    const originalIndex = history.findIndex(h => h.id === item.id);
+    if (originalIndex === 0) return 'LIVE';
+    
+    const diff = getReignTimeMs(item);
+    if (diff < 0) return '0s';
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  };
+
+  // Sorted based on selected filter
+  const leaderboard = [...history].sort((a, b) => {
+    if (leaderboardSort === 'traffic') return (b.clicks || 0) - (a.clicks || 0);
+    if (leaderboardSort === 'reign') return getReignTimeMs(b) - getReignTimeMs(a);
+    return b.price_paid - a.price_paid; // default 'bid'
+  });
 
   const activeList = tab === 'activity' ? history : leaderboard;
   const currentPage = tab === 'activity' ? activityPage : leaderboardPage;
@@ -47,26 +79,6 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours}h ago`;
     return `${Math.floor(diffHours / 24)}d ago`;
-  };
-
-  const getReignTimeStr = (item: HistoryItem) => {
-    const originalIndex = history.findIndex(h => h.id === item.id);
-    if (originalIndex <= 0) return 'LIVE';
-    
-    // The item that overthrew this one is at originalIndex - 1 (since array is newest-first)
-    const currentCreatedAt = new Date(item.created_at).getTime();
-    const overthrownAt = new Date(history[originalIndex - 1].created_at).getTime();
-    const diff = overthrownAt - currentCreatedAt;
-    
-    if (diff < 0) return '0s';
-
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    if (h > 0) return `${h}h ${m}m`;
-    if (m > 0) return `${m}m ${s}s`;
-    return `${s}s`;
   };
 
   return (
@@ -94,6 +106,22 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
           <Trophy className="h-3.5 w-3.5 text-yellow-400 shrink-0" /> <span className="truncate">Leaderboard ({leaderboard.length})</span>
         </button>
       </div>
+
+      {/* Leaderboard Filters */}
+      {tab === 'leaderboard' && (
+        <div className="flex items-center justify-end px-3 py-1.5 border-b border-terminal-green/20 bg-black/60">
+           <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-2 uppercase font-bold tracking-widest">SORT BY:</span>
+           <select 
+             className="bg-black border border-terminal-green/30 text-[9px] sm:text-[10px] uppercase font-bold text-terminal-green px-2 py-1 outline-none cursor-pointer hover:bg-terminal-green/10 transition-colors"
+             value={leaderboardSort}
+             onChange={(e) => setLeaderboardSort(e.target.value as 'bid' | 'traffic' | 'reign')}
+           >
+             <option value="bid">Highest Bid</option>
+             <option value="traffic">Most Traffic</option>
+             <option value="reign">Longest Reign</option>
+           </select>
+        </div>
+      )}
 
       {/* List Content */}
       <div className="divide-y divide-terminal-green/10 min-h-[220px] overflow-hidden">
