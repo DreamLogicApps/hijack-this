@@ -370,21 +370,13 @@ function HijackAppContent() {
             </div>
 
             {/* Primary Call to Action */}
-            <div className="w-full pt-4 sm:pt-6 pb-2">
+            <div className="w-full pt-5 pb-2 flex justify-center">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full relative group overflow-hidden rounded-xl bg-gradient-to-b from-[#4dff2a] to-[#209908] text-black font-black text-lg sm:text-xl uppercase tracking-widest py-4 sm:py-5 border-b-[6px] sm:border-b-8 border-[#125c04] active:border-b-0 active:translate-y-[6px] sm:active:translate-y-[8px] transition-all duration-75 shadow-[0_10px_30px_rgba(57,255,20,0.4)] hover:shadow-[0_15px_40px_rgba(57,255,20,0.6)]"
+                className="w-full max-w-xs sm:max-w-sm flex items-center justify-center gap-2 rounded-full bg-terminal-green px-6 py-3.5 text-black font-bold text-sm sm:text-base hover:bg-[#32e612] hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] transition-all duration-300 active:scale-95"
               >
-                {/* Highlight/Glare effect for 3D realism */}
-                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/40 to-transparent rounded-t-xl pointer-events-none"></div>
-                
-                {/* Hover Brightness */}
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none"></div>
-
-                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-sm">
-                  <Flame className="w-6 h-6 sm:w-7 sm:h-7 animate-pulse text-red-600 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]" />
-                  SEIZE THE CROWN [ ${(activeLink.hijack_price * 1.10).toFixed(2)}+ ]
-                </span>
+                <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+                HIJACK FOR ${(activeLink.hijack_price * 1.10).toFixed(2)}+
               </button>
             </div>
           </div>
