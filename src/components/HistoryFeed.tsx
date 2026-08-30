@@ -109,17 +109,22 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
 
       {/* Leaderboard Filters */}
       {tab === 'leaderboard' && (
-        <div className="flex items-center justify-end px-3 py-1.5 border-b border-terminal-green/20 bg-black/60">
-           <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-2 uppercase font-bold tracking-widest">SORT BY:</span>
-           <select 
-             className="bg-black border border-terminal-green/30 text-[9px] sm:text-[10px] uppercase font-bold text-terminal-green px-2 py-1 outline-none cursor-pointer hover:bg-terminal-green/10 transition-colors"
-             value={leaderboardSort}
-             onChange={(e) => setLeaderboardSort(e.target.value as 'bid' | 'traffic' | 'reign')}
-           >
-             <option value="bid">Highest Bid</option>
-             <option value="traffic">Most Traffic</option>
-             <option value="reign">Longest Reign</option>
-           </select>
+        <div className="flex items-center justify-center sm:justify-end px-2 sm:px-3 py-2 border-b border-terminal-green/20 bg-black/60 gap-1 sm:gap-2 overflow-x-auto">
+           <span className="text-[9px] sm:text-[10px] text-terminal-green/50 mr-1 uppercase font-bold tracking-widest hidden sm:inline shrink-0">SORT:</span>
+           
+           {(['bid', 'traffic', 'reign'] as const).map((opt) => (
+             <button
+               key={opt}
+               onClick={() => setLeaderboardSort(opt)}
+               className={`text-[9px] sm:text-[10px] uppercase font-bold px-2 sm:px-3 py-1 transition-colors border shrink-0 ${
+                 leaderboardSort === opt 
+                   ? 'bg-terminal-green/20 text-terminal-green border-terminal-green' 
+                   : 'bg-black text-terminal-green/40 border-terminal-green/20 hover:text-terminal-green hover:border-terminal-green/50 hover:bg-terminal-green/5'
+               }`}
+             >
+               {opt === 'bid' ? 'Highest Bid' : opt === 'traffic' ? 'Most Traffic' : 'Longest Reign'}
+             </button>
+           ))}
         </div>
       )}
 
