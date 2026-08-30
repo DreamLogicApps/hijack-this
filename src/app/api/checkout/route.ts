@@ -41,10 +41,10 @@ export async function POST(req: Request) {
 
     // 1. DODO PAYMENTS CHECKOUT
     if (dodoApiKey && dodoProductId) {
-      const mode = dodoApiKey.startsWith('live_') ? 'live' : 'test';
+      const mode = process.env.DODO_PAYMENTS_MODE === 'test' ? 'test' : 'live';
       const dodoEndpoint = `https://${mode}.dodopayments.com/payments`;
 
-      console.log(`[Dodo Payments] Creating checkout session for $${finalPrice}...`);
+      console.log(`[Dodo Payments] Creating ${mode} checkout session for $${finalPrice}...`);
 
       const response = await fetch(dodoEndpoint, {
         method: 'POST',
