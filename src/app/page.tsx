@@ -18,6 +18,7 @@ interface LinkData {
   hijack_price: number;
   owner_name: string;
   updated_at: string;
+  clicks?: number;
 }
 
 const FALLBACK_LINK: LinkData = {
@@ -136,6 +137,7 @@ function HijackAppContent() {
     let currentLinkChannel: ReturnType<typeof supabase.channel>;
     let historyChannel: ReturnType<typeof supabase.channel>;
 
+
     try {
       // Subscribe to current_link changes
       currentLinkChannel = supabase
@@ -193,6 +195,18 @@ function HijackAppContent() {
     const text = encodeURIComponent(`🔥 ${activeLink.owner_name} is currently holding the #1 link on HijackThis for $${activeLink.hijack_price.toFixed(2)}!\n\nCan you outbid them?`);
     const shareUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(window.location.href)}`;
     window.open(shareUrl, '_blank');
+  };
+
+  const handleTrackClick = async (type: 'current' | 'history', id: string) => {
+    try {
+      await fetch('/api/track-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, id }),
+      });
+    } catch (err) {
+      console.error('Failed to track click:', err);
+    }
   };
 
   if (loading) {
@@ -351,7 +365,7 @@ function HijackAppContent() {
           </div>
 
           {/* History Feed & Leaderboard Tabs */}
-          <HistoryFeed history={history} />
+          <HistoryFeed history={history} onTrackClick={handleTrackClick} />
 
         </div>
       </div>

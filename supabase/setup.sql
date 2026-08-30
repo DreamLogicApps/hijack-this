@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS current_link (
     label TEXT NOT NULL,
     hijack_price FLOAT NOT NULL,
     owner_name TEXT NOT NULL,
+    clicks INT DEFAULT 0,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS hijack_history (
     label TEXT NOT NULL,
     owner_name TEXT NOT NULL,
     price_paid FLOAT NOT NULL,
+    clicks INT DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -45,14 +47,30 @@ BEGIN
 END $$;
 
 -- Insert initial seed data if current_link is empty
-INSERT INTO current_link (url, label, hijack_price, owner_name)
-SELECT 'https://youtube.com', 'The Internet''s Forgotten Scraps', 5.00, 'System Admin'
+INSERT INTO current_link (url, label, hijack_price, owner_name, clicks)
+SELECT 'https://youtube.com', 'The Internet''s Forgotten Scraps', 5.00, 'System Admin', 0
 WHERE NOT EXISTS (SELECT 1 FROM current_link);
 
 -- Insert initial seed record into hijack_history if empty
-INSERT INTO hijack_history (url, label, owner_name, price_paid)
-SELECT 'https://youtube.com', 'The Internet''s Forgotten Scraps', 'System Admin', 5.00
+INSERT INTO hijack_history (url, label, owner_name, price_paid, clicks)
+SELECT 'https://youtube.com', 'The Internet''s Forgotten Scraps', 'System Admin', 5.00, 0
 WHERE NOT EXISTS (SELECT 1 FROM hijack_history);
+
+-- Create RPC function to atomically increment clicks for current_link
+CREATE OR REPLACE FUNCTION increment_current_clicks(row_id UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE current_link SET clicks = clicks + 1 WHERE id = row_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create RPC function to atomically increment clicks for hijack_history
+CREATE OR REPLACE FUNCTION increment_history_clicks(row_id UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE hijack_history SET clicks = clicks + 1 WHERE id = row_id;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Enable Realtime for both tables
 ALTER PUBLICATION supabase_realtime ADD TABLE current_link;

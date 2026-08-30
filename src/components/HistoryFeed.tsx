@@ -14,11 +14,12 @@ export interface HistoryItem {
 
 interface HistoryFeedProps {
   history: HistoryItem[];
+  onTrackClick?: (type: 'history', id: string) => void;
 }
 
 const ITEMS_PER_PAGE = 5;
 
-export function HistoryFeed({ history }: HistoryFeedProps) {
+export function HistoryFeed({ history, onTrackClick }: HistoryFeedProps) {
   const [tab, setTab] = useState<'activity' | 'leaderboard'>('activity');
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
@@ -109,14 +110,25 @@ export function HistoryFeed({ history }: HistoryFeedProps) {
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="font-bold text-glitch-blue text-xs truncate max-w-[100px] sm:max-w-[160px]">{item.owner_name}</span>
                       {tab === 'activity' && (
-                        <span className="text-[9px] sm:text-[10px] text-terminal-green/40 shrink-0">{formatTimeAgo(item.created_at)}</span>
+                        <span className="text-[9px] sm:text-[10px] text-terminal-green/40 shrink-0">
+                          {formatTimeAgo(item.created_at)}
+                          <span className="mx-1 opacity-50">•</span>
+                          {item.clicks || 0} clicks
+                        </span>
+                      )}
+                      {tab === 'leaderboard' && (
+                        <span className="text-[9px] sm:text-[10px] text-terminal-green/40 shrink-0 ml-1">
+                          <span className="mx-1 opacity-50">•</span>
+                          {item.clicks || 0} clicks
+                        </span>
                       )}
                     </div>
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1 max-w-full"
+                      onClick={() => onTrackClick?.('history', item.id)}
+                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1 max-w-full mt-0.5"
                     >
                       <span className="truncate max-w-[140px] sm:max-w-[220px]">{item.label}</span>
                       <ExternalLink className="h-2.5 w-2.5 shrink-0 inline" />
