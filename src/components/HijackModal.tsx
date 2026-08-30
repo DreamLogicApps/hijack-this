@@ -72,8 +72,14 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
     e.preventDefault();
     setError('');
 
-    if (!isValidUrl(newUrl)) {
-      setError('Please enter a valid URL (e.g., https://example.com)');
+    let finalUrl = newUrl.trim();
+    if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+      finalUrl = 'https://' + finalUrl;
+      setNewUrl(finalUrl); // update the input visually
+    }
+
+    if (!isValidUrl(finalUrl)) {
+      setError('Please enter a valid URL (e.g., example.com)');
       return;
     }
 
@@ -101,7 +107,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          newUrl,
+          newUrl: finalUrl,
           newLabel: sanitizeInput(newLabel),
           newName: sanitizeInput(newName),
           customPrice: activePrice,
