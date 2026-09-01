@@ -117,17 +117,25 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
       try {
         const urlObj = new URL(finalUrl);
         const domain = urlObj.hostname.replace('www.', '');
-        const domainName = domain.split('.')[0];
-        
-        if (!newLabel) {
-          setNewLabel(domainName.charAt(0).toUpperCase() + domainName.slice(1));
-        }
+        let domainName = domain.split('.')[0];
+        domainName = domainName.charAt(0).toUpperCase() + domainName.slice(1);
 
         if (domain === 'x.com' || domain === 'twitter.com') {
           const pathParts = urlObj.pathname.split('/').filter(Boolean);
-          if (pathParts.length > 0 && !newName) {
-            setNewName(pathParts[0]);
+          if (pathParts.length > 0) {
+            const handle = pathParts[0];
+            if (!newName) {
+              setNewName(handle);
+            }
+            if (!newLabel || newLabel === 'X' || newLabel === 'Twitter') {
+              setNewLabel(`@${handle}`);
+            }
+            return; // Skip default label
           }
+        }
+
+        if (!newLabel) {
+          setNewLabel(domainName);
         }
       } catch (e) {}
     }
