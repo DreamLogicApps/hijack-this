@@ -41,7 +41,8 @@ function HijackAppContent() {
   const [copied, setCopied] = useState(false);
   const [isTakeoverActive, setIsTakeoverActive] = useState(false);
   const [takeoverInfo, setTakeoverInfo] = useState<{ owner: string; price: number } | null>(null);
-  const currentPriceRef = useRef<number>(0);
+  const [siteDescription, setSiteDescription] = useState('');
+  const currentPriceRef = useRef<number>(FALLBACK_LINK.hijack_price);
 
   const triggerTakeoverAnimation = (owner: string, price: number) => {
     setTakeoverInfo({ owner, price });
@@ -95,6 +96,60 @@ function HijackAppContent() {
   };
 
   const hasHandledSuccessRef = useRef(false);
+
+  useEffect(() => {
+    const fetchCurrentLink = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('hijack_history')
+          .select('*')
+          .eq('status', 'active')
+          .order('hijack_price', { ascending: false })
+          .limit(1)
+          .single();
+        
+        if (data) {
+          setLinkData(data);
+          currentPriceRef.current = data.hijack_price;
+        }
+      } catch (err) {
+        console.error('Error fetching link:', err);
+      } finally {
+        // Reduced initialization delay for snappier load
+        setTimeout(() => setLoading(false), 800);
+      }
+    };
+
+    fetchCurrentLink();
+  }, []);
+
+  useEffect(() => {
+    if (!linkData?.url && !FALLBACK_LINK.url) return;
+    const urlToFetch = linkData?.url || FALLBACK_LINK.url;
+    setSiteDescription('');
+    
+    const fetchMeta = async () => {
+      try {
+        const urlObj = new URL(urlToFetch);
+        const domain = urlObj.hostname.replace('www.', '');
+        if (domain === 'x.com' || domain === 'twitter.com') {
+          setSiteDescription('X (Twitter) Profile');
+          return;
+        }
+
+        const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(urlToFetch)}`);
+        const data = await res.json();
+        if (data?.data?.description) {
+          setSiteDescription(data.data.description);
+        } else if (data?.data?.title) {
+          setSiteDescription(data.data.title);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchMeta();
+  }, [linkData?.url]);
 
   useEffect(() => {
     // Avoid synchronous state updates inside useEffect
@@ -364,11 +419,14 @@ function HijackAppContent() {
               </div>
             </div>
 
-            {/* Background Site Indicator */}
-            <div className="hidden sm:flex items-center gap-1 text-[9px] sm:text-[10px] text-terminal-green/80 font-mono bg-terminal-green/10 px-2 sm:px-2.5 py-1 border border-terminal-green/30 max-w-full truncate">
-              <Eye className="h-3 w-3 text-glitch-blue shrink-0" />
-              <span className="truncate">PHANTOM BACKGROUND PROJECTING: <span className="text-yellow-400 font-bold">{activeLink.url}</span></span>
-            </div>
+            {/* Site Description */}
+            {siteDescription && (
+              <div className="text-center px-4 max-w-sm sm:max-w-md">
+                <p className="text-terminal-green/60 text-[11px] sm:text-xs font-mono italic leading-relaxed line-clamp-2">
+                  &quot;{siteDescription}&quot;
+                </p>
+              </div>
+            )}
 
             {/* Action Toolbar */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1 font-mono text-[11px] sm:text-xs">
