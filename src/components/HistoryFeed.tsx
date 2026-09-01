@@ -29,6 +29,22 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
   const [activityPage, setActivityPage] = useState(1);
   const [leaderboardPage, setLeaderboardPage] = useState(1);
 
+  const getLogoUrl = (urlStr: string) => {
+    try {
+      const urlObj = new URL(urlStr);
+      const domain = urlObj.hostname.replace('www.', '');
+      if (domain === 'x.com' || domain === 'twitter.com') {
+        const pathParts = urlObj.pathname.split('/').filter(Boolean);
+        if (pathParts.length > 0) {
+          return `https://unavatar.io/twitter/${pathParts[0]}`;
+        }
+      }
+      return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    } catch {
+      return '';
+    }
+  };
+
   const getReignTimeMs = (item: HistoryItem) => {
     const originalIndex = history.findIndex(h => h.id === item.id);
     if (originalIndex < 0) return 0;
@@ -248,8 +264,16 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
                           onTrackClick?.('history', item.id);
                         }
                       }}
-                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1 max-w-full mt-0.5"
+                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1.5 max-w-full mt-0.5"
                     >
+                      {getLogoUrl(item.url) && (
+                        <img 
+                          src={getLogoUrl(item.url)} 
+                          alt="Logo" 
+                          className="w-3.5 h-3.5 rounded-sm object-cover shrink-0 opacity-80 group-hover:opacity-100 transition-opacity"
+                          onError={(e) => (e.currentTarget.style.display = 'none')}
+                        />
+                      )}
                       <span className="truncate max-w-[140px] sm:max-w-[220px]">{item.label}</span>
                       <ExternalLink className="h-2.5 w-2.5 shrink-0 inline" />
                     </a>
