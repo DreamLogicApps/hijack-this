@@ -39,7 +39,7 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
           return `https://unavatar.io/twitter/${pathParts[0]}`;
         }
       }
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
     } catch {
       return '';
     }

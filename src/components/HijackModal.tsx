@@ -92,7 +92,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
         
         // Default favicon
         setUrlIcon(
-          <img src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`} alt="favicon" className="w-4 h-4 rounded-sm object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+          <img src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`} alt="favicon" className="w-4 h-4 rounded-sm object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
         );
       } catch (e) {
         setUrlIcon(<Globe className="h-4 w-4 text-terminal-green/50" />);
