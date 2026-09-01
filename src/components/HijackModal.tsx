@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Zap, Plus, Minus } from 'lucide-react';
+import { Loader2, Zap, Plus, Minus, Globe, CheckCircle2 } from 'lucide-react';
 
 interface HijackModalProps {
   isOpen: boolean;
@@ -23,6 +23,8 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [urlIcon, setUrlIcon] = useState<React.ReactNode>(<Globe className="h-4 w-4 text-terminal-green/50" />);
+  const [isUrlValid, setIsUrlValid] = useState(false);
 
   // Reset loading state whenever modal opens or current price updates
   useEffect(() => {
@@ -60,6 +62,70 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
   const sanitizeInput = (input: string) => {
     return input.replace(/[<>]/g, '');
+  };
+
+  useEffect(() => {
+    let checkUrl = newUrl.trim();
+    if (checkUrl && !checkUrl.startsWith('http://') && !checkUrl.startsWith('https://')) {
+      checkUrl = 'https://' + checkUrl;
+    }
+
+    if (isValidUrl(checkUrl)) {
+      setIsUrlValid(true);
+      try {
+        const urlObj = new URL(checkUrl);
+        const domain = urlObj.hostname.replace('www.', '');
+        
+        // Twitter/X logic
+        if (domain === 'x.com' || domain === 'twitter.com') {
+          const pathParts = urlObj.pathname.split('/').filter(Boolean);
+          if (pathParts.length > 0) {
+            const handle = pathParts[0];
+            setUrlIcon(
+              <img src={`https://unavatar.io/twitter/${handle}`} alt="avatar" className="w-5 h-5 rounded-full border border-terminal-green/50 object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+            );
+            return;
+          }
+        }
+        
+        // Default favicon
+        setUrlIcon(
+          <img src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`} alt="favicon" className="w-4 h-4 rounded-sm object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+        );
+      } catch (e) {
+        setUrlIcon(<Globe className="h-4 w-4 text-terminal-green/50" />);
+      }
+    } else {
+      setIsUrlValid(false);
+      setUrlIcon(<Globe className="h-4 w-4 text-terminal-green/50" />);
+    }
+  }, [newUrl]);
+
+  const handleUrlBlur = () => {
+    let finalUrl = newUrl.trim();
+    if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+      finalUrl = 'https://' + finalUrl;
+      setNewUrl(finalUrl);
+    }
+    
+    if (isValidUrl(finalUrl)) {
+      try {
+        const urlObj = new URL(finalUrl);
+        const domain = urlObj.hostname.replace('www.', '');
+        const domainName = domain.split('.')[0];
+        
+        if (!newLabel) {
+          setNewLabel(domainName.charAt(0).toUpperCase() + domainName.slice(1));
+        }
+
+        if (domain === 'x.com' || domain === 'twitter.com') {
+          const pathParts = urlObj.pathname.split('/').filter(Boolean);
+          if (pathParts.length > 0 && !newName) {
+            setNewName(`@${pathParts[0]}`);
+          }
+        }
+      } catch (e) {}
+    }
   };
 
   const activePrice = Number(customPrice) || minRequiredPrice;
@@ -233,15 +299,24 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="newUrl" className="text-terminal-green uppercase text-xs tracking-widest">New Target URL</Label>
-            <Input
-              id="newUrl"
-              placeholder="https://your-website.com"
-              value={newUrl}
-              onChange={(e) => setNewUrl(e.target.value)}
-              className="bg-black/50 border-terminal-green/30 text-terminal-green focus:border-terminal-green placeholder:text-terminal-green/30 rounded-none text-xs"
-              required
-            />
+            <Label htmlFor="newUrl" className="text-terminal-green uppercase text-xs tracking-widest flex justify-between items-center">
+              <span>New Target URL</span>
+              {isUrlValid && <span className="text-[10px] text-terminal-green font-bold flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> VALID</span>}
+            </Label>
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5 pointer-events-none">
+                {urlIcon}
+              </div>
+              <Input
+                id="newUrl"
+                placeholder="x.com/itsjack_dev"
+                value={newUrl}
+                onChange={(e) => setNewUrl(e.target.value)}
+                onBlur={handleUrlBlur}
+                className="bg-black/80 border-terminal-green/30 text-terminal-green focus:border-terminal-green focus:ring-1 focus:ring-terminal-green/50 placeholder:text-terminal-green/30 rounded-xl text-base pl-10 h-11 transition-all"
+                required
+              />
+            </div>
           </div>
 
           <div className="space-y-1.5">
@@ -251,7 +326,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
               placeholder="The Ultimate Link"
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
-              className="bg-black/50 border-terminal-green/30 text-terminal-green focus:border-terminal-green placeholder:text-terminal-green/30 rounded-none text-xs"
+              className="bg-black/80 border-terminal-green/30 text-terminal-green focus:border-terminal-green focus:ring-1 focus:ring-terminal-green/50 placeholder:text-terminal-green/30 rounded-xl text-sm h-11 px-4 transition-all"
               required
               maxLength={40}
             />
@@ -264,7 +339,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
               placeholder="@outbidking"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="bg-black/50 border-terminal-green/30 text-terminal-green focus:border-terminal-green placeholder:text-terminal-green/30 rounded-none text-xs"
+              className="bg-black/80 border-terminal-green/30 text-terminal-green focus:border-terminal-green focus:ring-1 focus:ring-terminal-green/50 placeholder:text-terminal-green/30 rounded-xl text-sm h-11 px-4 transition-all"
               required
               maxLength={25}
             />
