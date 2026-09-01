@@ -220,6 +220,22 @@ function HijackAppContent() {
     }
   };
 
+  const getLogoUrl = (urlStr: string) => {
+    try {
+      const urlObj = new URL(urlStr);
+      const domain = urlObj.hostname.replace('www.', '');
+      if (domain === 'x.com' || domain === 'twitter.com') {
+        const pathParts = urlObj.pathname.split('/').filter(Boolean);
+        if (pathParts.length > 0) {
+          return `https://unavatar.io/twitter/${pathParts[0]}`;
+        }
+      }
+      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    } catch {
+      return '';
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-terminal-green font-mono">
