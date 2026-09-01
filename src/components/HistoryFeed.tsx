@@ -210,7 +210,7 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
             return (
               <div key={`${item.id}-${idx}`} className="p-2 sm:p-2.5 flex items-center justify-between hover:bg-terminal-green/5 transition-colors gap-2 min-w-0">
                 <div className="flex items-center gap-2 min-w-0 overflow-hidden flex-1">
-                  {tab === 'leaderboard' && (
+                  {tab === 'leaderboard' ? (
                     <div className="w-5 sm:w-6 flex items-center justify-center shrink-0">
                       {globalIndex === 0 ? (
                         <span title="#1 Gold Champion" className="flex items-center justify-center">
@@ -228,6 +228,19 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
                         <span className="w-4 h-4 rounded-full bg-terminal-green/10 border border-terminal-green/30 text-terminal-green/60 text-[9px] font-bold flex items-center justify-center">
                           {globalIndex + 1}
                         </span>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center shrink-0">
+                      {getLogoUrl(item.url) ? (
+                        <img 
+                          src={getLogoUrl(item.url)} 
+                          alt="Logo" 
+                          className="w-full h-full rounded-md object-cover border border-terminal-green/30 shadow-[0_0_8px_rgba(0,255,65,0.15)]"
+                          onError={(e) => (e.currentTarget.style.display = 'none')}
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-md border border-terminal-green/30 bg-terminal-green/10" />
                       )}
                     </div>
                   )}
@@ -264,9 +277,9 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
                           onTrackClick?.('history', item.id);
                         }
                       }}
-                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1.5 max-w-full mt-0.5"
+                      className="text-terminal-green/80 hover:text-terminal-green hover:underline truncate text-[10px] sm:text-[11px] flex items-center gap-1.5 max-w-full mt-0.5 group"
                     >
-                      {getLogoUrl(item.url) && (
+                      {tab === 'leaderboard' && getLogoUrl(item.url) && (
                         <img 
                           src={getLogoUrl(item.url)} 
                           alt="Logo" 
