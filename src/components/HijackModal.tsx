@@ -66,7 +66,9 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
   useEffect(() => {
     let checkUrl = newUrl.trim();
-    if (checkUrl && !checkUrl.startsWith('http://') && !checkUrl.startsWith('https://')) {
+    if (checkUrl.startsWith('@')) {
+      checkUrl = 'https://x.com/' + checkUrl.substring(1);
+    } else if (checkUrl && !checkUrl.startsWith('http://') && !checkUrl.startsWith('https://')) {
       checkUrl = 'https://' + checkUrl;
     }
 
@@ -103,7 +105,10 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
   const handleUrlBlur = () => {
     let finalUrl = newUrl.trim();
-    if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+    if (finalUrl.startsWith('@')) {
+      finalUrl = 'https://x.com/' + finalUrl.substring(1);
+      setNewUrl(finalUrl);
+    } else if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
       finalUrl = 'https://' + finalUrl;
       setNewUrl(finalUrl);
     }
@@ -121,7 +126,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
         if (domain === 'x.com' || domain === 'twitter.com') {
           const pathParts = urlObj.pathname.split('/').filter(Boolean);
           if (pathParts.length > 0 && !newName) {
-            setNewName(`@${pathParts[0]}`);
+            setNewName(pathParts[0]);
           }
         }
       } catch (e) {}
@@ -140,7 +145,10 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
     setError('');
 
     let finalUrl = newUrl.trim();
-    if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+    if (finalUrl.startsWith('@')) {
+      finalUrl = 'https://x.com/' + finalUrl.substring(1);
+      setNewUrl(finalUrl); // update the input visually
+    } else if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
       finalUrl = 'https://' + finalUrl;
       setNewUrl(finalUrl); // update the input visually
     }
@@ -181,7 +189,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
         body: JSON.stringify({
           newUrl: finalUrl,
           newLabel: sanitizeInput(newLabel),
-          newName: sanitizeInput(newName),
+          newName: sanitizeInput(newName.startsWith('@') ? newName : `@${newName}`),
           customPrice: activePrice,
         }),
       });
@@ -334,15 +342,18 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
           <div className="space-y-1.5">
             <Label htmlFor="newName" className="text-terminal-green uppercase text-xs tracking-widest">Your Alias / Handle</Label>
-            <Input
-              id="newName"
-              placeholder="@outbidking"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="bg-black/80 border-terminal-green/30 text-terminal-green focus:border-terminal-green focus:ring-1 focus:ring-terminal-green/50 placeholder:text-terminal-green/30 rounded-xl text-sm h-11 px-4 transition-all"
-              required
-              maxLength={25}
-            />
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-terminal-green/50 font-bold">@</span>
+              <Input
+                id="newName"
+                placeholder="outbidking"
+                value={newName.replace(/^@/, '')}
+                onChange={(e) => setNewName(e.target.value.replace(/^@/, ''))}
+                className="bg-black/80 border-terminal-green/30 text-terminal-green focus:border-terminal-green focus:ring-1 focus:ring-terminal-green/50 placeholder:text-terminal-green/30 rounded-xl text-sm h-11 pl-8 pr-4 transition-all"
+                required
+                maxLength={25}
+              />
+            </div>
           </div>
 
           {error && <p className="text-glitch-red text-xs font-bold pt-1">{error}</p>}
