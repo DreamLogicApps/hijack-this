@@ -421,6 +421,10 @@ function HijackAppContent() {
       <footer className="w-full mt-12 py-8 text-center text-[10px] sm:text-xs text-terminal-green/40 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
         <p>© {new Date().getFullYear()} HIJACKIT.LOL - SYSTEM OPERATIONAL</p>
         <span className="hidden sm:inline text-terminal-green/20">•</span>
+        <a href="https://x.com/itsjack_dev" target="_blank" rel="noopener noreferrer" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50 flex items-center gap-1">
+          <span className="font-bold text-[12px] -mt-[1px]">𝕏</span> Created by @itsjack_dev
+        </a>
+        <span className="hidden sm:inline text-terminal-green/20">•</span>
         <Link href="/about" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50">
           About / Rules
         </Link>
