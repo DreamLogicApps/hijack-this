@@ -22,6 +22,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
   const [customPrice, setCustomPrice] = useState<string>(minRequiredPrice.toFixed(2));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   // Reset loading state whenever modal opens or current price updates
   useEffect(() => {
@@ -85,6 +86,11 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
     if (!newLabel.trim() || !newName.trim()) {
       setError('Label and Alias are required.');
+      return;
+    }
+
+    if (!agreedToTerms) {
+      setError('You must agree to the Terms of Service.');
       return;
     }
 
@@ -266,10 +272,24 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
 
           {error && <p className="text-glitch-red text-xs font-bold pt-1">{error}</p>}
 
+          <div className="flex items-start gap-2 pt-2 pb-1">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="mt-1 accent-terminal-green w-3.5 h-3.5 bg-black border-terminal-green/50 cursor-pointer"
+              required
+            />
+            <label htmlFor="terms" className="text-[10px] sm:text-xs text-terminal-green/70 leading-tight cursor-pointer">
+              I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-terminal-green">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-terminal-green">Privacy Policy</a>. All sales are final and non-refundable.
+            </label>
+          </div>
+
           <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-terminal-green text-black hover:bg-terminal-green/90 font-bold uppercase tracking-wider rounded-none crt-flicker py-5 text-sm"
+            disabled={loading || !agreedToTerms}
+            className="w-full bg-terminal-green text-black hover:bg-terminal-green/90 font-bold uppercase tracking-wider rounded-none crt-flicker py-5 text-sm disabled:opacity-50"
           >
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {loading ? 'PROCESSING...' : `CONFIRM BID $${activePrice.toFixed(2)}`}
