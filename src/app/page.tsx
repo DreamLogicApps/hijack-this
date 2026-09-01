@@ -329,10 +329,18 @@ function HijackAppContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => activeLink.id && handleTrackClick('current', activeLink.id)}
-                className="group inline-flex items-center justify-center gap-1.5 text-xl sm:text-3xl md:text-4xl font-black text-terminal-green hover:text-white transition-all duration-300 glow-text underline decoration-terminal-green decoration-2 underline-offset-8 break-all max-w-full"
+                className="group inline-flex items-center justify-center gap-3 sm:gap-4 text-xl sm:text-3xl md:text-4xl font-black text-terminal-green hover:text-white transition-all duration-300 glow-text break-all max-w-full"
               >
-                <span className="truncate max-w-[260px] sm:max-w-md">{activeLink.label}</span>
-                <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+                {getLogoUrl(activeLink.url) && (
+                  <img 
+                    src={getLogoUrl(activeLink.url)} 
+                    alt="Logo" 
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl border-2 border-terminal-green/50 group-hover:border-white transition-colors object-cover shrink-0 shadow-[0_0_15px_rgba(0,255,65,0.3)]"
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                )}
+                <span className="truncate max-w-[220px] sm:max-w-md underline decoration-terminal-green decoration-2 underline-offset-8">{activeLink.label}</span>
+                <ExternalLink className="h-4 w-4 sm:h-6 sm:w-6 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
               </a>
               <div className="mt-3 mb-1 flex items-center gap-1.5 text-[10px] sm:text-xs font-mono text-terminal-green/80 bg-terminal-green/10 border border-terminal-green/20 px-2.5 py-1 uppercase tracking-widest shadow-[inset_0_0_10px_rgba(0,255,65,0.05)]">
                 <span className="w-1.5 h-1.5 bg-glitch-red animate-ping rounded-full inline-block"></span>
