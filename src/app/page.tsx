@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { HijackModal } from '@/components/HijackModal';
 import { StatsHeader } from '@/components/StatsHeader';
