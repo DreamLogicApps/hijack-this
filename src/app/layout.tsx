@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HijackThis.site",
-  description: "Pay to hijack the single focal link on the internet! Outbid the reigning champion to control the spotlight.",
+  title: "HijackIt.lol",
+  description: "The ultimate king-of-the-hill link battle.",
   openGraph: {
-    title: "HijackThis.site",
-    description: "Pay to hijack the single focal link on the internet! Outbid the reigning champion to control the spotlight.",
+    title: "HijackIt.lol",
+    description: "The ultimate king-of-the-hill link battle.",
     type: "website",
   },
 };

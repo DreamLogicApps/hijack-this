@@ -202,7 +202,7 @@ function HijackAppContent() {
 
   const handleShareX = () => {
     if (!activeLink) return;
-    const text = encodeURIComponent(`🚨 SYSTEM OVERRIDE 🚨\n\n${activeLink.owner_name} just seized the #1 spot on HijackThis for $${activeLink.hijack_price.toFixed(2)}! 👑💰\n\nThey are currently siphoning all the site traffic. Do you have what it takes to overthrow them? 🗡️💻\n\n#HijackThis #KingOfTheHill`);
+    const text = encodeURIComponent(`🚨 SYSTEM OVERRIDE 🚨\n\n${activeLink.owner_name} just seized the #1 spot on HijackIt for $${activeLink.hijack_price.toFixed(2)}! 👑💰\n\nThey are currently siphoning all the site traffic. Do you have what it takes to overthrow them? 🗡️💻\n\n#HijackIt #KingOfTheHill`);
     const shareUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(window.location.href)}`;
     window.open(shareUrl, '_blank');
   };
@@ -293,7 +293,7 @@ function HijackAppContent() {
             <div className="w-2.5 h-2.5 rounded-full bg-glitch-red animate-pulse" />
             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
             <div className="w-2.5 h-2.5 rounded-full bg-terminal-green" />
-            <span className="font-bold text-terminal-green tracking-wider pl-1 text-[11px] sm:text-xs">HIJACKTHIS.SITE</span>
+            <span className="font-bold text-terminal-green tracking-wider pl-1 text-[11px] sm:text-xs">HIJACKIT.LOL</span>
           </div>
           <div className="flex items-center gap-1.5 text-[10px] text-terminal-green/70">
             <span className="inline-block w-2 h-2 rounded-full bg-terminal-green animate-ping" /> LIVE REIGN
@@ -416,6 +416,14 @@ function HijackAppContent() {
           ownerName={activeLink.owner_name}
         />
       )}
+
+      <footer className="w-full mt-12 py-8 text-center text-[10px] sm:text-xs text-terminal-green/40 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+        <p>© {new Date().getFullYear()} HIJACKIT.LOL - SYSTEM OPERATIONAL</p>
+        <span className="hidden sm:inline text-terminal-green/20">•</span>
+        <Link href="/about" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50">
+          About / Rules
+        </Link>
+      </footer>
     </main>
   );
 }

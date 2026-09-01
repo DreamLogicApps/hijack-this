@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           customer: {
             name: newName || 'Anonymous Hijacker',
-            email: 'hijacker@hijackthis.site',
+            email: 'hijacker@hijackit.lol',
           },
           billing: { country: 'US' },
           payment_link: true,

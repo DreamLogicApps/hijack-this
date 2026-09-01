@@ -56,11 +56,15 @@ INSERT INTO hijack_history (url, label, owner_name, price_paid, clicks)
 SELECT 'https://youtube.com', 'The Internet''s Forgotten Scraps', 'System Admin', 5.00, 0
 WHERE NOT EXISTS (SELECT 1 FROM hijack_history);
 
--- Create RPC function to atomically increment clicks for current_link
+-- Create RPC function to atomically increment clicks for current_link and its history record
 CREATE OR REPLACE FUNCTION increment_current_clicks(row_id UUID)
 RETURNS void AS $$
 BEGIN
   UPDATE current_link SET clicks = clicks + 1 WHERE id = row_id;
+  
+  -- Also update the latest hijack_history row so the clicks persist
+  UPDATE hijack_history SET clicks = clicks + 1 
+  WHERE id = (SELECT id FROM hijack_history ORDER BY created_at DESC LIMIT 1);
 END;
 $$ LANGUAGE plpgsql;
 

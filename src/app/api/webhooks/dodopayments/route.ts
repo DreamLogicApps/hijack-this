@@ -109,7 +109,7 @@ export async function POST(req: Request) {
       console.error('Error inserting into hijack_history via Dodo Payments webhook:', historyErr);
     }
 
-    console.log(`✅ Successfully updated HijackThis via Dodo Payments for $${finalPrice} (${newName} -> ${newUrl})`);
+    console.log(`✅ Successfully updated HijackIt via Dodo Payments for $${finalPrice} (${newName} -> ${newUrl})`);
 
     return NextResponse.json({ success: true, message: 'Updated link successfully' });
   } catch (err: unknown) {
