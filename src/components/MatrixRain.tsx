@@ -23,7 +23,7 @@ export function MatrixRain() {
     window.addEventListener('resize', resizeCanvas);
 
     // Characters for the matrix rain (binary, hex, & cyber symbols)
-    const chars = '01HIJACKIT014040x390xFF010101010101';
+    const chars = '01HACKRANK014040x390xFF010101010101';
     const fontSize = 12;
     const columns = Math.floor(canvas.width / fontSize);
     const drops: number[] = Array(columns).fill(1);

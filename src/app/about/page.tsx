@@ -16,7 +16,7 @@ export default function AboutPage() {
 
         <header className="border-l-4 border-terminal-green pl-6 space-y-2 py-2">
           <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter glitch-text">
-            About HijackIt
+            About HackRank
           </h1>
           <p className="text-terminal-green/70 text-lg">The ultimate King-of-the-Hill link battle.</p>
         </header>
@@ -28,7 +28,7 @@ export default function AboutPage() {
           </div>
           
           <p>
-            Welcome to <span className="font-bold text-white">HijackIt.lol</span>. This is a digital battleground where only one link can rule at a time. 
+            Welcome to <span className="font-bold text-white">HackRank.lol</span>. This is a digital battleground where only one link can rule at a time. 
             There are no banners, no sidebars, and no hidden text links. Just one massive, focal spotlight for the entire internet to see.
           </p>
 
@@ -52,7 +52,7 @@ export default function AboutPage() {
               <span className="text-yellow-400 font-bold">▶</span>
               <div>
                 <strong className="text-white uppercase tracking-wider block mb-1">Global Background Projection</strong>
-                When you win the bid, a live, full-screen screenshot of your website is dynamically generated and permanently projected into the background of HijackIt for all visitors to see.
+                When you win the bid, a live, full-screen screenshot of your website is dynamically generated and permanently projected into the background of HackRank for all visitors to see.
               </div>
             </li>
             <li className="flex gap-3">
@@ -91,7 +91,7 @@ export default function AboutPage() {
       </div>
 
       <footer className="w-full mt-12 py-8 text-center text-[10px] sm:text-xs text-terminal-green/40 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-        <p>© {new Date().getFullYear()} HIJACKIT.LOL - SYSTEM OPERATIONAL</p>
+        <p>© {new Date().getFullYear()} HACKRANK.LOL - SYSTEM OPERATIONAL</p>
         <span className="hidden sm:inline text-terminal-green/20">•</span>
         <a href="https://x.com/itsjack_dev" target="_blank" rel="noopener noreferrer" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50 flex items-center gap-1">
           <span className="font-bold text-[12px] -mt-[1px]">𝕏</span> Created by @itsjack_dev

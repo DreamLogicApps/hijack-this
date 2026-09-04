@@ -3,12 +3,13 @@ import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 
 export async function POST(req: Request) {
   try {
-    const { newUrl, newLabel, newName, customPrice } = await req.json();
+    const { newUrl, newLabel, newName, customPrice, slotType = 'main' } = await req.json();
 
     // 1. Fetch current price from Supabase
     const { data: currentLink, error } = await supabase
       .from('current_link')
       .select('hijack_price, id')
+      .eq('slot_type', slotType)
       .limit(1)
       .single();
 
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           customer: {
             name: newName || 'Anonymous Hijacker',
-            email: 'hijacker@hijackit.lol',
+            email: 'hijacker@hackrank.lol',
           },
           billing: { country: 'US' },
           payment_link: true,
@@ -87,8 +88,9 @@ export async function POST(req: Request) {
             newName,
             newPrice: finalPrice.toString(),
             linkId: currentLink.id,
+            slotType,
           },
-          return_url: `${origin}/?success=true&newUrl=${encodeURIComponent(newUrl)}&newLabel=${encodeURIComponent(newLabel)}&newName=${encodeURIComponent(newName)}&newPrice=${finalPrice}&linkId=${currentLink.id}`,
+          return_url: `${origin}/?success=true&newUrl=${encodeURIComponent(newUrl)}&newLabel=${encodeURIComponent(newLabel)}&newName=${encodeURIComponent(newName)}&newPrice=${finalPrice}&linkId=${currentLink.id}&slotType=${slotType}`,
         }),
       });
 
@@ -135,6 +137,7 @@ export async function POST(req: Request) {
                   newName,
                   newPrice: finalPrice.toString(),
                   linkId: currentLink.id,
+                  slotType,
                 },
               },
             },
@@ -195,6 +198,7 @@ export async function POST(req: Request) {
         url: newUrl,
         label: newLabel,
         owner_name: newName,
+        slot_type: slotType,
         price_paid: finalPrice,
         created_at: new Date().toISOString(),
       });

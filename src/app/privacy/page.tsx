@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           
           <h2 className="text-xl font-bold uppercase text-white border-b border-terminal-green/20 pb-2">1. Information We Collect</h2>
           <p>
-            When you purchase a spot on HijackIt, we collect the information you voluntarily provide: the target URL, the display text, and your chosen alias. 
+            When you purchase a spot on HackRank, we collect the information you voluntarily provide: the target URL, the display text, and your chosen alias. 
             We do not collect or store your payment information directly; all transactions are securely processed by our payment provider (Dodo Payments / Stripe).
           </p>
 
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
       </div>
 
       <footer className="w-full mt-12 py-8 text-center text-[10px] sm:text-xs text-terminal-green/40 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-        <p>© {new Date().getFullYear()} HIJACKIT.LOL - SYSTEM OPERATIONAL</p>
+        <p>© {new Date().getFullYear()} HACKRANK.LOL - SYSTEM OPERATIONAL</p>
         <span className="hidden sm:inline text-terminal-green/20">•</span>
         <a href="https://x.com/itsjack_dev" target="_blank" rel="noopener noreferrer" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50 flex items-center gap-1">
           <span className="font-bold text-[12px] -mt-[1px]">𝕏</span> Created by @itsjack_dev

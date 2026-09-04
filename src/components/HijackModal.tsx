@@ -11,10 +11,18 @@ interface HijackModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentPrice: number;
+  slotType: string;
 }
 
-export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps) {
+export function HijackModal({ isOpen, onClose, currentPrice, slotType }: HijackModalProps) {
   const minRequiredPrice = Number((currentPrice * 1.10).toFixed(2));
+  
+  const getSlotDisplayName = (type: string) => {
+    if (type === 'main') return 'THE #1 SPOT';
+    const parts = type.split('_');
+    if (parts.length === 3) return `THE ${parts[1].toUpperCase()} ${parts[2]} AD`;
+    return `THE ${type.replace('ad_', '').toUpperCase()} AD`;
+  };
   
   const [newUrl, setNewUrl] = useState('');
   const [newLabel, setNewLabel] = useState('');
@@ -199,6 +207,7 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
           newLabel: sanitizeInput(newLabel),
           newName: sanitizeInput(newName.startsWith('@') ? newName : `@${newName}`),
           customPrice: activePrice,
+          slotType: slotType,
         }),
       });
 
@@ -230,10 +239,11 @@ export function HijackModal({ isOpen, onClose, currentPrice }: HijackModalProps)
     }}>
       <DialogContent className="sm:max-w-[450px] bg-black border-terminal-green/60 text-terminal-green glow-box">
         <DialogHeader>
-          <DialogTitle className="glitch-text text-2xl font-bold uppercase tracking-wider flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-400 fill-yellow-400" /> INITIATE HIJACK
+          <DialogTitle className="text-xl sm:text-2xl font-black text-white uppercase tracking-tighter flex items-center justify-center gap-2 font-mono glitch-text">
+            <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400 fill-yellow-400 crt-flicker" />
+            {`HIJACK ${getSlotDisplayName(slotType)}`}
           </DialogTitle>
-          <DialogDescription className="text-terminal-green/70 font-mono text-xs">
+          <DialogDescription className="text-terminal-green/80 text-[10px] sm:text-xs">
             Outbid the champion. Min required bid is <span className="text-terminal-green font-bold">${minRequiredPrice.toFixed(2)}</span>.
           </DialogDescription>
         </DialogHeader>

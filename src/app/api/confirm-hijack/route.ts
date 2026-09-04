@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 
 export async function POST(req: Request) {
   try {
-    const { paymentId, newUrl, newLabel, newName, newPrice, linkId } = await req.json();
+    const { paymentId, newUrl, newLabel, newName, newPrice, linkId, slotType = 'main' } = await req.json();
 
     const dodoApiKey = process.env.DODO_PAYMENTS_API_KEY?.trim();
 
@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     let finalLabel = newLabel;
     let finalName = newName;
     let finalPriceNum = parseFloat(newPrice);
+    let finalSlotType = slotType;
 
     // 1. STRICT SECURITY GUARD: VERIFY STATUS WITH DODO PAYMENTS GATEWAY SERVER
     if (dodoApiKey && paymentId) {
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
       if (meta.newLabel) finalLabel = meta.newLabel;
       if (meta.newName) finalName = meta.newName;
       if (meta.newPrice) finalPriceNum = parseFloat(meta.newPrice);
+      if (meta.slotType) finalSlotType = meta.slotType;
     }
 
     if (!finalUrl || !finalLabel || !finalName || isNaN(finalPriceNum)) {
@@ -63,6 +65,7 @@ export async function POST(req: Request) {
     const { data: currentLink } = await supabaseAdmin
       .from('current_link')
       .select('hijack_price, owner_name, label, id')
+      .eq('slot_type', finalSlotType)
       .limit(1)
       .single();
 
@@ -99,6 +102,7 @@ export async function POST(req: Request) {
         url: finalUrl,
         label: finalLabel,
         owner_name: finalName,
+        slot_type: finalSlotType,
         price_paid: finalPriceNum,
         created_at: new Date().toISOString(),
       });

@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS current_link (
     hijack_price FLOAT NOT NULL,
     owner_name TEXT NOT NULL,
     clicks INT DEFAULT 0,
+    trash_talk TEXT,
+    slot_type TEXT DEFAULT 'main',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -30,6 +32,8 @@ CREATE TABLE IF NOT EXISTS hijack_history (
     owner_name TEXT NOT NULL,
     price_paid FLOAT NOT NULL,
     clicks INT DEFAULT 0,
+    trash_talk TEXT,
+    slot_type TEXT DEFAULT 'main',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

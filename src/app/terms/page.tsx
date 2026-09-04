@@ -25,12 +25,12 @@ export default function TermsPage() {
           
           <h2 className="text-xl font-bold uppercase text-white border-b border-terminal-green/20 pb-2">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using HijackIt.lol, you accept and agree to be bound by the terms and provision of this agreement.
+            By accessing and using HackRank.lol, you accept and agree to be bound by the terms and provision of this agreement.
           </p>
 
           <h2 className="text-xl font-bold uppercase text-white border-b border-terminal-green/20 pb-2">2. The "King of the Hill" Mechanic</h2>
           <p>
-            HijackIt is a digital bidding platform. When you purchase the #1 spot, your link will be displayed exclusively until another user pays the new inflated bounty. 
+            HackRank is a digital bidding platform. When you purchase the #1 spot, your link will be displayed exclusively until another user pays the new inflated bounty. 
             There is no guaranteed duration for how long your link will remain active. It could be days, hours, or seconds. <strong>All sales are final and strictly non-refundable.</strong>
           </p>
 

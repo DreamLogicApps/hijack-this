@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       payload.payment?.metadata || 
       {};
 
-    const { newUrl, newLabel, newName, newPrice, linkId } = metadata;
+    const { newUrl, newLabel, newName, newPrice, linkId, trashTalk, slotType = 'main' } = metadata;
 
     if (!newUrl || !newLabel || !newName || !newPrice) {
       console.error('Metadata missing or invalid in Dodo Payments webhook payload:', metadata);
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       .select('id')
       .eq('owner_name', newName)
       .eq('label', newLabel)
-      .eq('price_paid', finalPrice)
+      .eq('slot_type', slotType)
       .gte('created_at', sixtySecsAgo)
       .limit(1);
 
@@ -61,6 +61,7 @@ export async function POST(req: Request) {
     const { data: currentLink } = await supabaseAdmin
       .from('current_link')
       .select('hijack_price, owner_name, label, id')
+      .eq('slot_type', slotType)
       .limit(1)
       .single();
 
@@ -101,6 +102,7 @@ export async function POST(req: Request) {
         url: newUrl,
         label: newLabel,
         owner_name: newName,
+        slot_type: slotType,
         price_paid: finalPrice,
         created_at: new Date().toISOString(),
       });
@@ -109,7 +111,7 @@ export async function POST(req: Request) {
       console.error('Error inserting into hijack_history via Dodo Payments webhook:', historyErr);
     }
 
-    console.log(`✅ Successfully updated HijackIt via Dodo Payments for $${finalPrice} (${newName} -> ${newUrl})`);
+    console.log(`✅ Successfully updated HackRank via Dodo Payments for $${finalPrice} (${newName} -> ${newUrl})`);
 
     return NextResponse.json({ success: true, message: 'Updated link successfully' });
   } catch (err: unknown) {
