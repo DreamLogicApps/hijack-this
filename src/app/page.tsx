@@ -42,6 +42,22 @@ const createFallback = (id: string, label: string, price: number, slotType: stri
   slot_type: slotType,
 });
 
+const getLogoUrl = (urlStr: string) => {
+  try {
+    const urlObj = new URL(urlStr);
+    const domain = urlObj.hostname.replace('www.', '');
+    if (domain === 'x.com' || domain === 'twitter.com') {
+      const pathParts = urlObj.pathname.split('/').filter(Boolean);
+      if (pathParts.length > 0) {
+        return `https://unavatar.io/twitter/${pathParts[0]}`;
+      }
+    }
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  } catch {
+    return '';
+  }
+};
+
 const AdSlotCard = ({ link, onHijack, align, size = 'md' }: { link: LinkData, onHijack: () => void, align: 'left' | 'right', size?: 'lg' | 'md' | 'sm' }) => {
   const containerClass = size === 'lg' ? 'p-3' : size === 'md' ? 'p-2' : 'p-1.5';
   const labelClass = size === 'lg' ? 'text-sm sm:text-base' : size === 'md' ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs';
@@ -55,13 +71,27 @@ const AdSlotCard = ({ link, onHijack, align, size = 'md' }: { link: LinkData, on
           {align === 'left' ? 'L' : 'R'} {link.slot_type?.split('_')[2]} AD SLOT
         </div>
         
-        <a href={link.url} target="_blank" rel="noopener noreferrer" className={`group-hover:text-white text-glitch-blue transition-colors font-bold ${labelClass} break-all flex items-center justify-center gap-1 max-w-full`}>
+        <a href={link.url} target="_blank" rel="noopener noreferrer" className={`group-hover:text-white text-glitch-blue transition-colors font-bold ${labelClass} break-all flex items-center justify-center gap-1.5 max-w-full`}>
+          {getLogoUrl(link.url) && (
+            <img 
+              src={getLogoUrl(link.url)} 
+              alt="Logo" 
+              className={`${size === 'lg' ? 'w-5 h-5' : size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5'} rounded-sm border border-glitch-blue/30 group-hover:border-white/50 transition-colors object-cover shrink-0`}
+              onError={(e) => (e.currentTarget.style.display = 'none')}
+            />
+          )}
           <span className="truncate underline decoration-glitch-blue/50 underline-offset-4">{link.label}</span>
           <ExternalLink className="h-3 w-3 shrink-0" />
         </a>
         
-        <div className={`text-[10px] text-glitch-blue/70 mt-1 font-mono`}>
-          by <span className="font-bold text-glitch-blue">{link.owner_name}</span>
+        <div className="flex items-center justify-center gap-2 mt-1.5">
+          <div className={`text-[10px] text-glitch-blue/70 font-mono`}>
+            by <span className="font-bold text-glitch-blue">{link.owner_name}</span>
+          </div>
+          <div className="flex items-center gap-1 text-[9px] text-glitch-blue/50 font-mono bg-glitch-blue/10 px-1.5 py-0.5 border border-glitch-blue/20">
+            <span className="w-1 h-1 bg-glitch-red animate-ping rounded-full inline-block"></span>
+            {link.clicks || 0} CLICKS
+          </div>
         </div>
       </div>
       
@@ -300,20 +330,6 @@ function HijackAppContent() {
     }
   };
 
-  const getLogoUrl = (urlStr: string) => {
-    try {
-      const urlObj = new URL(urlStr);
-      const domain = urlObj.hostname.replace('www.', '');
-      if (domain === 'x.com' || domain === 'twitter.com') {
-        const pathParts = urlObj.pathname.split('/').filter(Boolean);
-        if (pathParts.length > 0) {
-          return `https://unavatar.io/twitter/${pathParts[0]}`;
-        }
-      }
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-    } catch {
-      return '';
-    }
   };
 
   if (loading) {
