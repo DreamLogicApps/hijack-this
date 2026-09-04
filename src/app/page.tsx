@@ -58,7 +58,7 @@ const getLogoUrl = (urlStr: string) => {
   }
 };
 
-const AdSlotCard = ({ link, onHijack, align, size = 'md' }: { link: LinkData, onHijack: () => void, align: 'left' | 'right', size?: 'lg' | 'md' | 'sm' }) => {
+const AdSlotCard = ({ link, onHijack, align, size = 'md', onTrackClick }: { link: LinkData, onHijack: () => void, align: 'left' | 'right', size?: 'lg' | 'md' | 'sm', onTrackClick?: () => void }) => {
   const containerClass = size === 'lg' ? 'p-3' : size === 'md' ? 'p-2' : 'p-1.5';
   const labelClass = size === 'lg' ? 'text-sm sm:text-base' : size === 'md' ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs';
   const titleClass = size === 'lg' ? 'text-[9px] sm:text-[10px]' : 'text-[8px] sm:text-[9px]';
@@ -71,7 +71,7 @@ const AdSlotCard = ({ link, onHijack, align, size = 'md' }: { link: LinkData, on
           {align === 'left' ? 'L' : 'R'} {link.slot_type?.split('_')[2]} AD SLOT
         </div>
         
-        <a href={link.url} target="_blank" rel="noopener noreferrer" className={`group-hover:text-white text-glitch-blue transition-colors font-bold ${labelClass} break-all flex items-center justify-center gap-1.5 max-w-full`}>
+        <a href={link.url} target="_blank" rel="noopener noreferrer" onClick={onTrackClick} className={`group-hover:text-white text-glitch-blue transition-colors font-bold ${labelClass} break-all flex items-center justify-center gap-1.5 max-w-full`}>
           {getLogoUrl(link.url) && (
             <img 
               src={getLogoUrl(link.url)} 
@@ -430,9 +430,9 @@ function HijackAppContent() {
             
             {/* Left Ad Column */}
             <div className="lg:col-span-1 hidden lg:flex flex-col gap-3 justify-start h-full">
-              <AdSlotCard link={leftAd1} align="left" size="lg" onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd2} align="left" size="md" onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd3} align="left" size="sm" onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd1} align="left" size="lg" onTrackClick={() => leftAd1.id && handleTrackClick('current', leftAd1.id)} onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd2} align="left" size="md" onTrackClick={() => leftAd2.id && handleTrackClick('current', leftAd2.id)} onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd3} align="left" size="sm" onTrackClick={() => leftAd3.id && handleTrackClick('current', leftAd3.id)} onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
             </div>
 
             <div className={`lg:col-span-2 relative p-4 sm:p-6 md:p-8 bg-black/95 border-2 transition-all flex flex-col items-center text-center space-y-4 sm:space-y-5 glow-box h-full ${
@@ -518,19 +518,19 @@ function HijackAppContent() {
 
             {/* Right Ad Column */}
             <div className="lg:col-span-1 hidden lg:flex flex-col gap-3 justify-start h-full">
-              <AdSlotCard link={rightAd1} align="right" size="lg" onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd2} align="right" size="md" onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd3} align="right" size="sm" onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd1} align="right" size="lg" onTrackClick={() => rightAd1.id && handleTrackClick('current', rightAd1.id)} onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd2} align="right" size="md" onTrackClick={() => rightAd2.id && handleTrackClick('current', rightAd2.id)} onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd3} align="right" size="sm" onTrackClick={() => rightAd3.id && handleTrackClick('current', rightAd3.id)} onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
             </div>
             
             {/* Mobile Ads Layout (2-column stack) */}
             <div className="grid grid-cols-2 gap-2 lg:hidden mt-2">
-              <AdSlotCard link={leftAd1} align="left" size="md" onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd1} align="right" size="md" onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd2} align="left" size="sm" onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd2} align="right" size="sm" onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd3} align="left" size="sm" onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd3} align="right" size="sm" onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd1} align="left" size="md" onTrackClick={() => leftAd1.id && handleTrackClick('current', leftAd1.id)} onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd1} align="right" size="md" onTrackClick={() => rightAd1.id && handleTrackClick('current', rightAd1.id)} onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd2} align="left" size="sm" onTrackClick={() => leftAd2.id && handleTrackClick('current', leftAd2.id)} onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd2} align="right" size="sm" onTrackClick={() => rightAd2.id && handleTrackClick('current', rightAd2.id)} onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
+              <AdSlotCard link={leftAd3} align="left" size="sm" onTrackClick={() => leftAd3.id && handleTrackClick('current', leftAd3.id)} onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
+              <AdSlotCard link={rightAd3} align="right" size="sm" onTrackClick={() => rightAd3.id && handleTrackClick('current', rightAd3.id)} onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
             </div>
 
           </div>
