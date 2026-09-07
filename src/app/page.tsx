@@ -59,20 +59,20 @@ const getLogoUrl = (urlStr: string) => {
 };
 
 /* ─── Slot Tier Config ─── */
-const SLOT_TIERS: Record<string, { label: string; tier: string; borderClass: string; badgeColor: string }> = {
-  ad_left_1:  { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30' },
-  ad_right_1: { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30' },
-  ad_left_2:  { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30' },
-  ad_right_2: { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30' },
-  ad_left_3:  { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30' },
-  ad_right_3: { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30' },
+const SLOT_TIERS: Record<string, { label: string; tier: string; borderClass: string; badgeColor: string; bgClass: string; hoverBorderClass: string }> = {
+  ad_left_1:  { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30', bgClass: 'bg-gradient-to-b from-gold/[0.04] to-black/80 border-white/[0.08]', hoverBorderClass: 'hover:border-gold/40 shadow-[0_0_15px_rgba(251,191,36,0)] hover:shadow-[0_0_15px_rgba(251,191,36,0.15)]' },
+  ad_right_1: { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30', bgClass: 'bg-gradient-to-b from-gold/[0.04] to-black/80 border-white/[0.08]', hoverBorderClass: 'hover:border-gold/40 shadow-[0_0_15px_rgba(251,191,36,0)] hover:shadow-[0_0_15px_rgba(251,191,36,0.15)]' },
+  ad_left_2:  { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30', bgClass: 'bg-black/70 border-white/[0.06]', hoverBorderClass: 'hover:border-slate-300/30' },
+  ad_right_2: { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30', bgClass: 'bg-black/70 border-white/[0.06]', hoverBorderClass: 'hover:border-slate-300/30' },
+  ad_left_3:  { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30', bgClass: 'bg-black/40 border-white/[0.04]', hoverBorderClass: 'hover:border-amber-500/30 opacity-80 hover:opacity-100' },
+  ad_right_3: { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30', bgClass: 'bg-black/40 border-white/[0.04]', hoverBorderClass: 'hover:border-amber-500/30 opacity-80 hover:opacity-100' },
 };
 
 const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, onHijack: () => void, onTrackClick?: () => void }) => {
   const config = SLOT_TIERS[link.slot_type || ''] || SLOT_TIERS.ad_left_3;
   
   return (
-    <div className={`${config.borderClass} bg-black/70 backdrop-blur-sm border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group flex flex-col justify-between h-full relative overflow-hidden`}>
+    <div className={`${config.borderClass} ${config.bgClass} ${config.hoverBorderClass} border backdrop-blur-sm transition-all duration-300 group flex flex-col justify-between h-full relative overflow-hidden`}>
       {/* Subtle hover glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       
@@ -554,15 +554,24 @@ function HijackAppContent() {
               <span className="text-[9px] sm:text-[10px] text-white/25 font-mono">6 positions available</span>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-              {allAdSlots.map((slot) => (
-                <SponsoredSlotCard
-                  key={slot.slot_type}
-                  link={slot}
-                  onTrackClick={() => slot.id && handleTrackClick('current', slot.id)}
-                  onHijack={() => { setActiveSlotType(slot.slot_type || 'main'); setIsModalOpen(true); }}
-                />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+              {/* Prime Column */}
+              <div className="flex flex-col gap-2 sm:gap-3">
+                <SponsoredSlotCard link={leftAd1} onTrackClick={() => leftAd1.id && handleTrackClick('current', leftAd1.id)} onHijack={() => { setActiveSlotType(leftAd1.slot_type || 'main'); setIsModalOpen(true); }} />
+                <SponsoredSlotCard link={rightAd1} onTrackClick={() => rightAd1.id && handleTrackClick('current', rightAd1.id)} onHijack={() => { setActiveSlotType(rightAd1.slot_type || 'main'); setIsModalOpen(true); }} />
+              </div>
+              
+              {/* Featured Column */}
+              <div className="flex flex-col gap-2 sm:gap-3">
+                <SponsoredSlotCard link={leftAd2} onTrackClick={() => leftAd2.id && handleTrackClick('current', leftAd2.id)} onHijack={() => { setActiveSlotType(leftAd2.slot_type || 'main'); setIsModalOpen(true); }} />
+                <SponsoredSlotCard link={rightAd2} onTrackClick={() => rightAd2.id && handleTrackClick('current', rightAd2.id)} onHijack={() => { setActiveSlotType(rightAd2.slot_type || 'main'); setIsModalOpen(true); }} />
+              </div>
+
+              {/* Starter Column */}
+              <div className="flex flex-col gap-2 sm:gap-3">
+                <SponsoredSlotCard link={leftAd3} onTrackClick={() => leftAd3.id && handleTrackClick('current', leftAd3.id)} onHijack={() => { setActiveSlotType(leftAd3.slot_type || 'main'); setIsModalOpen(true); }} />
+                <SponsoredSlotCard link={rightAd3} onTrackClick={() => rightAd3.id && handleTrackClick('current', rightAd3.id)} onHijack={() => { setActiveSlotType(rightAd3.slot_type || 'main'); setIsModalOpen(true); }} />
+              </div>
             </div>
           </div>
 
