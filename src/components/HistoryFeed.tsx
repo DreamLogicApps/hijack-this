@@ -11,6 +11,7 @@ export interface HistoryItem {
   price_paid: number;
   clicks?: number;
   created_at: string;
+  slot_type?: string;
 }
 
 interface HistoryFeedProps {
@@ -48,17 +49,31 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
   const getReignTimeMs = (item: HistoryItem) => {
     const originalIndex = history.findIndex(h => h.id === item.id);
     if (originalIndex < 0) return 0;
-    if (originalIndex === 0) {
+    
+    // Find the next oldest item with the exact same slot_type
+    const overthrowerIndex = history.findIndex((h, idx) => idx < originalIndex && h.slot_type === item.slot_type);
+    
+    if (overthrowerIndex < 0) {
+      // It hasn't been overthrown yet
       return Date.now() - new Date(item.created_at).getTime();
     }
     const currentCreatedAt = new Date(item.created_at).getTime();
-    const overthrownAt = new Date(history[originalIndex - 1].created_at).getTime();
+    const overthrownAt = new Date(history[overthrowerIndex].created_at).getTime();
     return Math.max(0, overthrownAt - currentCreatedAt);
+  };
+
+  const getSlotLabel = (type?: string) => {
+    if (!type || type === 'main') return '';
+    if (type.includes('left_1') || type.includes('right_1')) return 'PRIME';
+    if (type.includes('left_2') || type.includes('right_2')) return 'FEATURED';
+    if (type.includes('left_3') || type.includes('right_3')) return 'STARTER';
+    return 'SLOT';
   };
 
   const getReignTimeStr = (item: HistoryItem) => {
     const originalIndex = history.findIndex(h => h.id === item.id);
-    if (originalIndex === 0) return 'LIVE';
+    const overthrowerIndex = history.findIndex((h, idx) => idx < originalIndex && h.slot_type === item.slot_type);
+    if (overthrowerIndex < 0) return 'LIVE';
     
     const diff = getReignTimeMs(item);
     if (diff < 0) return '0s';
@@ -248,6 +263,15 @@ export function HistoryFeed({ history, onTrackClick, activeLinkId }: HistoryFeed
                   <div className="flex flex-col text-left min-w-0 overflow-hidden flex-1">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="font-bold text-glitch-blue text-xs truncate max-w-[100px] sm:max-w-[160px]">{item.owner_name}</span>
+                      {item.slot_type && item.slot_type !== 'main' && (
+                        <span className={`text-[8px] font-bold px-1 py-0.5 border uppercase tracking-widest hidden sm:inline-block ${
+                          item.slot_type.includes('1') ? 'text-gold bg-gold/[0.05] border-gold/30' :
+                          item.slot_type.includes('2') ? 'text-slate-300 bg-slate-300/[0.05] border-slate-400/30' :
+                          'text-amber-500 bg-amber-700/[0.05] border-amber-600/30'
+                        }`}>
+                          {getSlotLabel(item.slot_type)}
+                        </span>
+                      )}
                       {tab === 'activity' && (
                         <span className="text-[9px] sm:text-[10px] text-white/25 shrink-0">
                           {formatTimeAgo(item.created_at)}
