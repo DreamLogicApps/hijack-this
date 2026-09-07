@@ -9,7 +9,7 @@ import { StatsHeader } from '@/components/StatsHeader';
 import { HistoryFeed, HistoryItem } from '@/components/HistoryFeed';
 import { CyberQRModal } from '@/components/CyberQRModal';
 import { MatrixRain } from '@/components/MatrixRain';
-import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, QrCode } from 'lucide-react';
+import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, QrCode, Zap, Crown, ArrowRight, MousePointerClick } from 'lucide-react';
 
 interface LinkData {
   id: string;
@@ -58,48 +58,74 @@ const getLogoUrl = (urlStr: string) => {
   }
 };
 
-const AdSlotCard = ({ link, onHijack, align, size = 'md', onTrackClick }: { link: LinkData, onHijack: () => void, align: 'left' | 'right', size?: 'lg' | 'md' | 'sm', onTrackClick?: () => void }) => {
-  const containerClass = size === 'lg' ? 'p-3' : size === 'md' ? 'p-2' : 'p-1.5';
-  const labelClass = size === 'lg' ? 'text-sm sm:text-base' : size === 'md' ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs';
-  const titleClass = size === 'lg' ? 'text-[9px] sm:text-[10px]' : 'text-[8px] sm:text-[9px]';
-  const buttonClass = size === 'lg' ? 'text-[10px] sm:text-xs py-2' : size === 'md' ? 'text-[9px] sm:text-[10px] py-1.5' : 'text-[8px] sm:text-[9px] py-1';
+/* ─── Slot Tier Config ─── */
+const SLOT_TIERS: Record<string, { label: string; tier: string; borderClass: string; badgeColor: string }> = {
+  ad_left_1:  { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30' },
+  ad_right_1: { label: 'PRIME',    tier: '1', borderClass: 'slot-tier-prime',    badgeColor: 'bg-gold/20 text-gold border-gold/30' },
+  ad_left_2:  { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30' },
+  ad_right_2: { label: 'FEATURED', tier: '2', borderClass: 'slot-tier-featured', badgeColor: 'bg-slate-400/20 text-slate-300 border-slate-400/30' },
+  ad_left_3:  { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30' },
+  ad_right_3: { label: 'STARTER',  tier: '3', borderClass: 'slot-tier-starter',  badgeColor: 'bg-amber-700/20 text-amber-500 border-amber-600/30' },
+};
+
+const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, onHijack: () => void, onTrackClick?: () => void }) => {
+  const config = SLOT_TIERS[link.slot_type || ''] || SLOT_TIERS.ad_left_3;
   
   return (
-    <div className={`${containerClass} border border-glitch-blue/50 bg-black/80 text-center flex flex-col items-center gap-1 hover:border-glitch-blue transition-colors group relative shadow-[0_0_15px_rgba(0,188,212,0.1)] h-full justify-between w-full`}>
-      <div className="w-full">
-        <div className={`${titleClass} font-bold text-glitch-blue uppercase tracking-widest bg-glitch-blue/10 px-2 py-1 border border-glitch-blue/30 w-full mb-2`}>
-          {align === 'left' ? 'L' : 'R'} {link.slot_type?.split('_')[2]} AD SLOT
+    <div className={`${config.borderClass} bg-black/70 backdrop-blur-sm border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group flex flex-col justify-between h-full relative overflow-hidden`}>
+      {/* Subtle hover glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      <div className="relative p-2.5 sm:p-3 space-y-2">
+        {/* Tier Badge */}
+        <div className={`inline-flex items-center px-1.5 py-0.5 text-[8px] sm:text-[9px] font-bold uppercase tracking-widest border ${config.badgeColor}`}>
+          {config.label}
         </div>
         
-        <a href={link.url} target="_blank" rel="noopener noreferrer" onClick={onTrackClick} className={`group-hover:text-white text-glitch-blue transition-colors font-bold ${labelClass} break-all flex items-center justify-center gap-1.5 max-w-full`}>
+        {/* Link with Logo */}
+        <a 
+          href={link.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          onClick={onTrackClick} 
+          className="flex items-center gap-2 group/link"
+        >
           {getLogoUrl(link.url) && (
             <img 
               src={getLogoUrl(link.url)} 
-              alt="Logo" 
-              className={`${size === 'lg' ? 'w-5 h-5' : size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5'} rounded-sm border border-glitch-blue/30 group-hover:border-white/50 transition-colors object-cover shrink-0`}
+              alt="" 
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-md border border-white/10 object-cover shrink-0 group-hover/link:border-white/30 transition-colors"
               onError={(e) => (e.currentTarget.style.display = 'none')}
             />
           )}
-          <span className="truncate underline decoration-glitch-blue/50 underline-offset-4">{link.label}</span>
-          <ExternalLink className="h-3 w-3 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover/link:text-white truncate transition-colors">
+              {link.label}
+            </div>
+            <div className="text-[9px] sm:text-[10px] text-white/40 truncate">
+              by {link.owner_name}
+            </div>
+          </div>
+          <ExternalLink className="h-3 w-3 text-white/20 group-hover/link:text-white/50 shrink-0 transition-colors" />
         </a>
         
-        <div className="flex items-center justify-center gap-2 mt-1.5">
-          <div className={`text-[10px] text-glitch-blue/70 font-mono`}>
-            by <span className="font-bold text-glitch-blue">{link.owner_name}</span>
+        {/* Stats Row */}
+        <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono">
+          <div className="flex items-center gap-1 text-white/30">
+            <span className="w-1 h-1 bg-glitch-red animate-pulse rounded-full inline-block"></span>
+            {link.clicks || 0} clicks
           </div>
-          <div className="flex items-center gap-1 text-[9px] text-glitch-blue/50 font-mono bg-glitch-blue/10 px-1.5 py-0.5 border border-glitch-blue/20">
-            <span className="w-1 h-1 bg-glitch-red animate-ping rounded-full inline-block"></span>
-            {link.clicks || 0} CLICKS
-          </div>
+          <div className="text-gold font-bold">${link.hijack_price.toFixed(2)}</div>
         </div>
       </div>
       
+      {/* Claim Button */}
       <button
         onClick={onHijack}
-        className={`mt-2 w-full border border-glitch-blue/50 bg-glitch-blue/10 hover:bg-glitch-blue/20 text-glitch-blue ${buttonClass} font-bold font-mono transition-all active:scale-95`}
+        className="w-full py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-white/[0.04] hover:bg-terminal-green/20 text-white/50 hover:text-terminal-green border-t border-white/[0.06] transition-all duration-200 flex items-center justify-center gap-1"
       >
-        HIJACK ${(link.hijack_price * 1.1).toFixed(2)}+
+        CLAIM ${(link.hijack_price * 1.1).toFixed(2)}+
+        <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
       </button>
     </div>
   );
@@ -128,6 +154,8 @@ function HijackAppContent() {
   const rightAd1 = linksData.find(l => l.slot_type === 'ad_right_1') || createFallback('r1', 'Ad Spot Available', 3.00, 'ad_right_1');
   const rightAd2 = linksData.find(l => l.slot_type === 'ad_right_2') || createFallback('r2', 'Ad Spot Available', 2.00, 'ad_right_2');
   const rightAd3 = linksData.find(l => l.slot_type === 'ad_right_3') || createFallback('r3', 'Ad Spot Available', 1.00, 'ad_right_3');
+
+  const allAdSlots = [leftAd1, rightAd1, leftAd2, rightAd2, leftAd3, rightAd3];
 
   const triggerTakeoverAnimation = (owner: string, price: number) => {
     setTakeoverInfo({ owner, price });
@@ -333,9 +361,9 @@ function HijackAppContent() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-terminal-green font-mono">
-        <div className="flex flex-col items-center gap-4 crt-flicker">
-          <Loader2 className="h-10 w-10 animate-spin text-terminal-green" />
-          <p className="glitch-text text-sm tracking-widest uppercase">INITIALIZING HIJACK_OS...</p>
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-terminal-green opacity-80" />
+          <p className="text-xs tracking-[0.3em] uppercase text-terminal-green/60">INITIALIZING HACKRANK...</p>
         </div>
       </div>
     );
@@ -361,7 +389,7 @@ function HijackAppContent() {
   const currentActiveTargetPrice = getActivePrice();
 
   return (
-    <main className="min-h-screen relative flex flex-col items-center justify-center p-2 sm:p-4 md:p-6 overflow-x-hidden bg-black">
+    <main className="min-h-screen relative flex flex-col items-center justify-center p-2 sm:p-4 md:p-6 overflow-x-hidden bg-black noise-overlay">
       <MatrixRain />
 
       {screenshotUrl && (
@@ -370,10 +398,10 @@ function HijackAppContent() {
           <img
             src={screenshotUrl}
             alt="Current Target Site Background"
-            className="w-full h-full object-cover opacity-50 filter blur-md contrast-125 saturate-125 animate-ken-burns transition-all duration-1000"
+            className="w-full h-full object-cover opacity-40 filter blur-lg contrast-110 saturate-110 animate-ken-burns transition-all duration-1000"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black/20 via-black/70 to-black/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black/10 via-black/60 to-black/95" />
         </div>
       )}
 
@@ -387,7 +415,7 @@ function HijackAppContent() {
               NEW CHAMPION TAKEOVER!
             </p>
             {takeoverInfo && (
-              <p className="text-yellow-400 font-mono text-xs sm:text-sm">
+              <p className="text-gold font-mono text-xs sm:text-sm">
                 <span className="text-glitch-blue">{takeoverInfo.owner}</span> paid ${takeoverInfo.price.toFixed(2)}
               </p>
             )}
@@ -395,30 +423,29 @@ function HijackAppContent() {
         </div>
       )}
 
-      <div className="absolute inset-0 pointer-events-none opacity-20 sm:opacity-30 select-none font-mono text-[9px] sm:text-[10px] z-0">
-        <div className="absolute top-[5%] left-[2%] text-glitch-red rotate-12 animate-pulse">404_LINK_CORRUPTED</div>
-        <div className="absolute top-[88%] left-[4%] text-glitch-blue -rotate-6">HTTP_402_PAYMENT_REQUIRED</div>
-        <div className="absolute top-[12%] right-[3%] text-terminal-green rotate-45">STATUS: OVERRIDDEN</div>
-        <div className="absolute top-[80%] right-[5%] text-glitch-red -rotate-12">UNAUTHORIZED_ACCESS</div>
-      </div>
-
-      <div className={`relative z-10 w-full max-w-5xl bg-black/90 backdrop-blur-xl border-2 border-terminal-green/60 glow-box transition-all ${
-        isTakeoverActive ? 'takeover-shake border-glitch-red shadow-[0_0_30px_rgba(255,0,60,0.6)]' : ''
+      {/* ─── Main Container ─── */}
+      <div className={`relative z-10 w-full max-w-6xl bg-black/90 backdrop-blur-xl border border-terminal-green/30 transition-all rounded-sm overflow-hidden ${
+        isTakeoverActive ? 'takeover-shake border-glitch-red shadow-[0_0_30px_rgba(255,0,60,0.6)]' : 'glow-box'
       }`}>
         
-        <div className="bg-terminal-green/10 border-b border-terminal-green/50 p-2 flex items-center justify-between text-xs font-mono">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-glitch-red animate-pulse" />
-            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-            <div className="w-2.5 h-2.5 rounded-full bg-terminal-green" />
-            <span className="font-bold text-terminal-green tracking-wider pl-1 text-[11px] sm:text-xs">HACKRANK.LOL</span>
+        {/* Terminal Title Bar */}
+        <div className="bg-gradient-to-r from-terminal-green/[0.08] via-terminal-green/[0.04] to-transparent border-b border-terminal-green/20 px-3 sm:px-4 py-2 flex items-center justify-between text-xs font-mono">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-glitch-red/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-terminal-green/80" />
+            </div>
+            <span className="font-bold text-terminal-green/80 tracking-wider text-[11px] sm:text-xs">HACKRANK.LOL</span>
+            <span className="text-terminal-green/30 hidden sm:inline">—</span>
+            <span className="text-terminal-green/30 text-[10px] hidden sm:inline">king of the hill</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] text-terminal-green/70">
-            <span className="inline-block w-2 h-2 rounded-full bg-terminal-green animate-ping" /> LIVE REIGN
+          <div className="flex items-center gap-1.5 text-[10px] text-terminal-green/50">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse" /> LIVE
           </div>
         </div>
 
-        <div className="p-2.5 sm:p-4 md:p-5 space-y-3 sm:space-y-4">
+        <div className="p-3 sm:p-5 md:p-6 space-y-4 sm:space-y-5">
           <StatsHeader
             currentPrice={mainLink.hijack_price}
             updatedAt={mainLink.updated_at}
@@ -426,115 +453,120 @@ function HijackAppContent() {
             totalBids={totalBids}
           />
 
-          <div className="flex flex-col lg:grid lg:grid-cols-4 gap-4 w-full">
+          {/* ─── Champion Card ─── */}
+          <div className={`relative p-5 sm:p-7 md:p-10 bg-gradient-to-b from-black/95 via-black/90 to-black/95 border transition-all flex flex-col items-center text-center space-y-5 sm:space-y-6 overflow-hidden ${
+            isTakeoverActive ? 'border-glitch-red' : 'border-terminal-green/30'
+          }`}>
+            {/* Subtle gradient aura behind champion */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(57,255,20,0.04)_0%,_transparent_70%)]" />
             
-            {/* Left Ad Column */}
-            <div className="lg:col-span-1 hidden lg:flex flex-col gap-3 justify-start h-full">
-              <AdSlotCard link={leftAd1} align="left" size="lg" onTrackClick={() => leftAd1.id && handleTrackClick('current', leftAd1.id)} onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd2} align="left" size="md" onTrackClick={() => leftAd2.id && handleTrackClick('current', leftAd2.id)} onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd3} align="left" size="sm" onTrackClick={() => leftAd3.id && handleTrackClick('current', leftAd3.id)} onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
+            {/* Champion Badge */}
+            <div className="relative inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 border border-gold/30 text-gold text-[10px] sm:text-[11px] font-bold tracking-widest uppercase glow-gold">
+              <Crown className="h-3.5 w-3.5 fill-gold/30 animate-float" />
+              REIGNING CHAMPION: <span className="text-white font-black">{mainLink.owner_name}</span>
             </div>
 
-            <div className={`lg:col-span-2 relative p-4 sm:p-6 md:p-8 bg-black/95 border-2 transition-all flex flex-col items-center text-center space-y-4 sm:space-y-5 glow-box h-full ${
-              isTakeoverActive ? 'border-glitch-red' : 'border-terminal-green/80'
-            }`}>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-500/10 border border-yellow-500/40 text-yellow-400 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase max-w-full truncate">
-                <Flame className="h-3.5 w-3.5 fill-yellow-400 shrink-0" /> REIGNING CHAMPION: <span className="text-white underline truncate">{mainLink.owner_name}</span>
-              </div>
-
-              <div className="py-2 sm:py-4 w-full flex flex-col items-center gap-2">
-                <a
-                  href={mainLink.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => mainLink.id && handleTrackClick('current', mainLink.id)}
-                  className="group inline-flex items-center justify-center gap-3 sm:gap-4 text-xl sm:text-3xl md:text-4xl font-black text-terminal-green hover:text-white transition-all duration-300 glow-text break-all max-w-full"
-                >
-                  {getLogoUrl(mainLink.url) && (
+            {/* Main Link Display */}
+            <div className="relative py-3 sm:py-5 w-full flex flex-col items-center gap-3">
+              <a
+                href={mainLink.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => mainLink.id && handleTrackClick('current', mainLink.id)}
+                className="group inline-flex items-center justify-center gap-3 sm:gap-4 text-xl sm:text-3xl md:text-4xl font-black text-terminal-green hover:text-white transition-all duration-300 break-all max-w-full"
+              >
+                {getLogoUrl(mainLink.url) && (
+                  <div className="relative shrink-0">
+                    <div className="absolute -inset-1.5 bg-terminal-green/20 rounded-xl blur-md group-hover:bg-white/20 transition-colors" />
                     <img 
                       src={getLogoUrl(mainLink.url)} 
                       alt="Logo" 
-                      className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl border-2 border-terminal-green/50 group-hover:border-white transition-colors object-cover shrink-0 shadow-[0_0_15px_rgba(0,255,65,0.3)]"
+                      className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl border-2 border-terminal-green/40 group-hover:border-white/50 transition-colors object-cover shadow-lg"
                       onError={(e) => (e.currentTarget.style.display = 'none')}
                     />
-                  )}
-                  <span className="truncate max-w-[220px] sm:max-w-md underline decoration-terminal-green decoration-2 underline-offset-8">{mainLink.label}</span>
-                  <ExternalLink className="h-4 w-4 sm:h-6 sm:w-6 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
-                </a>
-                <div className="mt-3 mb-1 flex items-center gap-1.5 text-[10px] sm:text-xs font-mono text-terminal-green/80 bg-terminal-green/10 border border-terminal-green/20 px-2.5 py-1 uppercase tracking-widest shadow-[inset_0_0_10px_rgba(0,255,65,0.05)]">
-                  <span className="w-1.5 h-1.5 bg-glitch-red animate-ping rounded-full inline-block"></span>
-                  <span className="font-bold text-terminal-green glow-text">{mainLink.clicks || 0} CLICKS</span>
-                </div>
-              </div>
-
-              {siteDescription && (
-                <div className="text-center px-4 max-w-sm sm:max-w-md">
-                  <p className="text-terminal-green/60 text-[11px] sm:text-xs font-mono italic leading-relaxed line-clamp-2">
-                    &quot;{siteDescription}&quot;
-                  </p>
-                </div>
-              )}
-
-              <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1 font-mono text-[11px] sm:text-xs">
-                <button
-                  onClick={handleCopyLink}
-                  className="px-2.5 py-1.5 bg-terminal-green/10 hover:bg-terminal-green/20 text-terminal-green border border-terminal-green/30 flex items-center gap-1 transition-colors"
-                >
-                  {copied ? <Check className="h-3.5 w-3.5 text-terminal-green" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? 'COPIED!' : 'COPY URL'}
-                </button>
-                <button
-                  onClick={() => setIsQrModalOpen(true)}
-                  className="px-2.5 py-1.5 bg-terminal-green/10 hover:bg-terminal-green/20 text-terminal-green border border-terminal-green/30 flex items-center gap-1 transition-colors"
-                >
-                  <QrCode className="h-3.5 w-3.5" /> QR CODE
-                </button>
-                <button
-                  onClick={handleShareX}
-                  className="px-2.5 py-1.5 bg-terminal-green/10 hover:bg-terminal-green/20 text-terminal-green border border-terminal-green/30 flex items-center gap-1 transition-colors"
-                >
-                  <span className="font-bold leading-none text-[13px] -mt-[1px]">𝕏</span>
-                  POST
-                </button>
-              </div>
-
-              <div className="w-full pt-5 pb-2 flex justify-center mt-auto">
-                <button
-                  onClick={() => { setActiveSlotType('main'); setIsModalOpen(true); }}
-                  className="w-full max-w-xs sm:max-w-sm relative overflow-hidden group flex items-center justify-center gap-2 rounded-full bg-terminal-green px-6 py-3.5 text-black font-bold text-sm sm:text-base animate-breathe-glow transition-all duration-300 active:scale-95"
-                >
-                  <div className="absolute top-0 left-0 h-full w-0 bg-white group-hover:w-full transition-all duration-300 ease-out z-0"></div>
-                  <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                    <div className="absolute top-0 left-0 h-full w-[40px] bg-white/40 mix-blend-overlay blur-[2px] animate-[sweep_4s_infinite_ease-in-out]"></div>
                   </div>
-
-                  <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-sm transition-colors duration-300">
-                    <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff0000] drop-shadow-[0_0_2px_rgba(255,255,255,0.8)] group-hover:scale-110 transition-transform duration-300" />
-                    HIJACK FOR ${(mainLink.hijack_price * 1.10).toFixed(2)}+
-                  </span>
-                </button>
+                )}
+                <span className="truncate max-w-[220px] sm:max-w-md glow-text">{mainLink.label}</span>
+                <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+              </a>
+              
+              {/* Click Counter */}
+              <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-terminal-green/60">
+                <span className="flex items-center gap-1.5 bg-terminal-green/[0.06] border border-terminal-green/15 px-2.5 py-1 uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 bg-glitch-red animate-pulse rounded-full inline-block" />
+                  <span className="font-bold text-terminal-green/80">{mainLink.clicks || 0}</span> CLICKS
+                </span>
               </div>
             </div>
 
-            {/* Right Ad Column */}
-            <div className="lg:col-span-1 hidden lg:flex flex-col gap-3 justify-start h-full">
-              <AdSlotCard link={rightAd1} align="right" size="lg" onTrackClick={() => rightAd1.id && handleTrackClick('current', rightAd1.id)} onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd2} align="right" size="md" onTrackClick={() => rightAd2.id && handleTrackClick('current', rightAd2.id)} onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd3} align="right" size="sm" onTrackClick={() => rightAd3.id && handleTrackClick('current', rightAd3.id)} onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
-            </div>
-            
-            {/* Mobile Ads Layout (2-column stack) */}
-            <div className="grid grid-cols-2 gap-2 lg:hidden mt-2">
-              <AdSlotCard link={leftAd1} align="left" size="md" onTrackClick={() => leftAd1.id && handleTrackClick('current', leftAd1.id)} onHijack={() => { setActiveSlotType('ad_left_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd1} align="right" size="md" onTrackClick={() => rightAd1.id && handleTrackClick('current', rightAd1.id)} onHijack={() => { setActiveSlotType('ad_right_1'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd2} align="left" size="sm" onTrackClick={() => leftAd2.id && handleTrackClick('current', leftAd2.id)} onHijack={() => { setActiveSlotType('ad_left_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd2} align="right" size="sm" onTrackClick={() => rightAd2.id && handleTrackClick('current', rightAd2.id)} onHijack={() => { setActiveSlotType('ad_right_2'); setIsModalOpen(true); }} />
-              <AdSlotCard link={leftAd3} align="left" size="sm" onTrackClick={() => leftAd3.id && handleTrackClick('current', leftAd3.id)} onHijack={() => { setActiveSlotType('ad_left_3'); setIsModalOpen(true); }} />
-              <AdSlotCard link={rightAd3} align="right" size="sm" onTrackClick={() => rightAd3.id && handleTrackClick('current', rightAd3.id)} onHijack={() => { setActiveSlotType('ad_right_3'); setIsModalOpen(true); }} />
+            {/* Site Description */}
+            {siteDescription && (
+              <p className="text-terminal-green/40 text-[11px] sm:text-xs font-mono italic leading-relaxed line-clamp-2 max-w-sm sm:max-w-md px-4">
+                &quot;{siteDescription}&quot;
+              </p>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-[11px]">
+              <button
+                onClick={handleCopyLink}
+                className="px-2.5 py-1.5 bg-white/[0.04] hover:bg-terminal-green/15 text-terminal-green/70 hover:text-terminal-green border border-terminal-green/15 hover:border-terminal-green/30 flex items-center gap-1.5 transition-all duration-200"
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                {copied ? 'COPIED!' : 'COPY URL'}
+              </button>
+              <button
+                onClick={() => setIsQrModalOpen(true)}
+                className="px-2.5 py-1.5 bg-white/[0.04] hover:bg-terminal-green/15 text-terminal-green/70 hover:text-terminal-green border border-terminal-green/15 hover:border-terminal-green/30 flex items-center gap-1.5 transition-all duration-200"
+              >
+                <QrCode className="h-3 w-3" /> QR
+              </button>
+              <button
+                onClick={handleShareX}
+                className="px-2.5 py-1.5 bg-white/[0.04] hover:bg-terminal-green/15 text-terminal-green/70 hover:text-terminal-green border border-terminal-green/15 hover:border-terminal-green/30 flex items-center gap-1.5 transition-all duration-200"
+              >
+                <span className="font-bold leading-none text-[12px]">𝕏</span> POST
+              </button>
             </div>
 
+            {/* HIJACK CTA Button */}
+            <div className="w-full pt-3 pb-1 flex justify-center">
+              <button
+                onClick={() => { setActiveSlotType('main'); setIsModalOpen(true); }}
+                className="w-full max-w-xs sm:max-w-sm relative overflow-hidden group flex items-center justify-center gap-2 bg-gradient-to-r from-terminal-green via-terminal-green to-[#00f0ff] px-6 py-3.5 sm:py-4 text-black font-bold text-sm sm:text-base tracking-wide animate-pulse-ring transition-all duration-300 active:scale-95 hover:shadow-[0_0_30px_rgba(57,255,20,0.4)]"
+              >
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/20 transition-colors duration-300" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-glitch-red drop-shadow-[0_0_4px_rgba(255,0,60,0.8)] group-hover:scale-110 transition-transform duration-300" />
+                  HIJACK FOR ${(mainLink.hijack_price * 1.10).toFixed(2)}+
+                </span>
+              </button>
+            </div>
           </div>
 
+          {/* ─── Sponsored Slots Section ─── */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Zap className="h-3.5 w-3.5 text-slot-cyan" />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white/50">Sponsored Slots</span>
+              </div>
+              <span className="text-[9px] sm:text-[10px] text-white/25 font-mono">6 positions available</span>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              {allAdSlots.map((slot) => (
+                <SponsoredSlotCard
+                  key={slot.slot_type}
+                  link={slot}
+                  onTrackClick={() => slot.id && handleTrackClick('current', slot.id)}
+                  onHijack={() => { setActiveSlotType(slot.slot_type || 'main'); setIsModalOpen(true); }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* ─── History / Leaderboard ─── */}
           <HistoryFeed history={history} onTrackClick={handleTrackClick} activeLinkId={mainLink?.id} />
 
         </div>
@@ -559,16 +591,49 @@ function HijackAppContent() {
         />
       )}
 
-      <footer className="w-full mt-12 py-8 text-center text-[10px] sm:text-xs text-terminal-green/40 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-        <p>© {new Date().getFullYear()} HACKRANK.LOL - SYSTEM OPERATIONAL</p>
-        <span className="hidden sm:inline text-terminal-green/20">•</span>
-        <a href="https://x.com/itsjack_dev" target="_blank" rel="noopener noreferrer" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50 flex items-center gap-1">
-          <span className="font-bold text-[12px] -mt-[1px]">𝕏</span> Created by @itsjack_dev
-        </a>
-        <span className="hidden sm:inline text-terminal-green/20">•</span>
-        <Link href="/about" className="hover:text-terminal-green transition-colors uppercase tracking-widest border-b border-transparent hover:border-terminal-green/50">
-          About / Rules
-        </Link>
+      {/* ─── How It Works Strip ─── */}
+      <div className="relative z-10 w-full max-w-6xl mt-6 sm:mt-8">
+        <div className="border border-white/[0.06] bg-black/60 backdrop-blur-sm p-4 sm:p-6">
+          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/30 text-center mb-4">How It Works</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            <div className="flex items-start gap-3 text-center sm:text-left">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-terminal-green/30 bg-terminal-green/10 flex items-center justify-center text-terminal-green font-bold text-xs">1</div>
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-white/80">Pay to Hijack</div>
+                <div className="text-[10px] sm:text-xs text-white/30 leading-relaxed">Outbid the current champion with a higher bid.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 text-center sm:text-left">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-gold/30 bg-gold/10 flex items-center justify-center text-gold font-bold text-xs">2</div>
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-white/80">Claim the Throne</div>
+                <div className="text-[10px] sm:text-xs text-white/30 leading-relaxed">Your link goes live instantly for all visitors.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 text-center sm:text-left">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-glitch-blue/30 bg-glitch-blue/10 flex items-center justify-center text-glitch-blue font-bold text-xs">3</div>
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-white/80">Reign Supreme</div>
+                <div className="text-[10px] sm:text-xs text-white/30 leading-relaxed">Hold your position until someone outbids you.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Footer ─── */}
+      <footer className="relative z-10 w-full max-w-6xl mt-6 py-6 text-center font-mono">
+        <div className="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-[10px] sm:text-xs text-white/25">
+          <p>© {new Date().getFullYear()} HACKRANK.LOL</p>
+          <span className="hidden sm:inline text-white/10">•</span>
+          <a href="https://x.com/itsjack_dev" target="_blank" rel="noopener noreferrer" className="hover:text-terminal-green/60 transition-colors flex items-center gap-1">
+            <span className="font-bold text-[12px]">𝕏</span> @itsjack_dev
+          </a>
+          <span className="hidden sm:inline text-white/10">•</span>
+          <Link href="/about" className="hover:text-terminal-green/60 transition-colors uppercase tracking-widest">
+            About / Rules
+          </Link>
+        </div>
       </footer>
     </main>
   );
@@ -578,7 +643,7 @@ export default function Home() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-black text-terminal-green font-mono">
-        <Loader2 className="h-10 w-10 animate-spin text-terminal-green" />
+        <Loader2 className="h-8 w-8 animate-spin text-terminal-green opacity-60" />
       </div>
     }>
       <HijackAppContent />
