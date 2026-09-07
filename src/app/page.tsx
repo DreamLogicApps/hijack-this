@@ -393,16 +393,7 @@ function HijackAppContent() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-terminal-green font-mono">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-terminal-green opacity-80" />
-          <p className="text-xs tracking-[0.3em] uppercase text-terminal-green/60">INITIALIZING HACKRANK...</p>
-        </div>
-      </div>
-    );
-  }
+
 
   const screenshotUrl = mainLink?.url 
     ? `https://api.microlink.io/?url=${encodeURIComponent(mainLink.url)}&screenshot=true&embed=screenshot.url`
