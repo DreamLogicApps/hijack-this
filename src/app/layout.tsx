@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HackRank.lol",
-  description: "The digital battleground where only one link reigns supreme. Hijack the #1 spot, drive traffic, and assert dominance.",
+  title: "HackRank | Hijack The Top Spot",
+  description: "The ultimate digital battleground where only one link reigns supreme. Hijack the #1 spot, drive traffic, and assert your dominance on HackRank.lol.",
+  keywords: ["link in bio", "ad space", "hijack", "traffic", "leaderboard", "cyberpunk", "hacker"],
   openGraph: {
-    title: "HackRank.lol",
-    description: "The digital battleground where only one link reigns supreme.",
+    title: "HackRank.lol - The Digital Battleground",
+    description: "Hijack the #1 spot, drive traffic, and assert your dominance.",
     url: "https://hackrank.lol",
     siteName: "HackRank",
     images: [
@@ -14,9 +15,16 @@ export const metadata: Metadata = {
         url: "https://hackrank.lol/og-image.png",
         width: 1200,
         height: 630,
+        alt: "HackRank.lol - Hijack the Top Spot",
       },
     ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HackRank | Hijack The Top Spot",
+    description: "The ultimate digital battleground where only one link reigns supreme.",
+    images: ["https://hackrank.lol/og-image.png"],
   },
 };
 
