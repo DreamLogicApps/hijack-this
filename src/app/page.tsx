@@ -459,6 +459,50 @@ function HijackAppContent() {
           }`}>
             {/* Subtle gradient aura behind champion */}
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(57,255,20,0.04)_0%,_transparent_70%)]" />
+
+            {/* Left Cyberpunk Flank */}
+            <div className="hidden md:flex absolute left-4 xl:left-8 top-0 bottom-0 flex-col justify-between py-8 pointer-events-none opacity-40 select-none z-0">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-terminal-green rounded-full animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.8)]" />
+                <div className="w-px h-16 bg-gradient-to-b from-terminal-green to-transparent" />
+              </div>
+              <div 
+                className="text-[9px] font-bold text-terminal-green tracking-[0.4em] uppercase rotate-180" 
+                style={{ writingMode: 'vertical-rl' }}
+              >
+                CHAMPION_LOCK // ACTIVE
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className={`w-5 h-0.5 ${i < 3 ? 'bg-terminal-green' : 'bg-terminal-green/20'}`} />
+                ))}
+              </div>
+            </div>
+
+            {/* Right Cyberpunk Flank */}
+            <div className="hidden md:flex absolute right-4 xl:right-8 top-0 bottom-0 flex-col justify-between py-8 pointer-events-none opacity-40 select-none items-end z-0">
+              <div className="flex flex-col items-end gap-1.5 font-mono text-[9px] text-glitch-blue text-right leading-none">
+                <div>0xFF</div>
+                <div>0x3A</div>
+                <div className="animate-pulse font-bold">0x8B</div>
+                <div>0x1C</div>
+                <div className="opacity-50">0x00</div>
+              </div>
+              
+              <div className="relative w-10 h-10 opacity-70">
+                <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-glitch-blue" />
+                <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-glitch-blue" />
+                <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-glitch-blue" />
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-glitch-blue" />
+                <div className="absolute inset-1.5 border border-glitch-blue/30 rounded-full flex items-center justify-center animate-[spin_4s_linear_infinite]">
+                  <div className="w-1 h-1 bg-glitch-blue rounded-full shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center gap-2 mr-4">
+                <div className="w-px h-16 bg-gradient-to-t from-glitch-blue to-transparent" />
+              </div>
+            </div>
             
             {/* Champion Badge */}
             <div className="relative inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 border border-gold/30 text-gold text-[10px] sm:text-[11px] font-bold tracking-widest uppercase glow-gold">
