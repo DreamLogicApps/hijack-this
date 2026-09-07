@@ -19,9 +19,10 @@ export function HijackModal({ isOpen, onClose, currentPrice, slotType }: HijackM
   
   const getSlotDisplayName = (type: string) => {
     if (type === 'main') return 'THE #1 SPOT';
-    const parts = type.split('_');
-    if (parts.length === 3) return `THE ${parts[1].toUpperCase()} ${parts[2]} AD`;
-    return `THE ${type.replace('ad_', '').toUpperCase()} AD`;
+    if (type === 'ad_left_1' || type === 'ad_right_1') return 'PRIME SLOT';
+    if (type === 'ad_left_2' || type === 'ad_right_2') return 'FEATURED SLOT';
+    if (type === 'ad_left_3' || type === 'ad_right_3') return 'STARTER SLOT';
+    return `THE SPONSORED SLOT`;
   };
   
   const [newUrl, setNewUrl] = useState('');
