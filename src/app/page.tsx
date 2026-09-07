@@ -74,7 +74,7 @@ const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, o
   return (
     <div className={`${config.borderClass} bg-black/70 backdrop-blur-sm border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group flex flex-col justify-between h-full relative overflow-hidden`}>
       {/* Subtle hover glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       
       <div className="relative p-2.5 sm:p-3 space-y-2">
         {/* Tier Badge */}
@@ -424,7 +424,7 @@ function HijackAppContent() {
       )}
 
       {/* ─── Main Container ─── */}
-      <div className={`relative z-10 w-full max-w-6xl bg-black/90 backdrop-blur-xl border border-terminal-green/30 transition-all rounded-sm overflow-hidden ${
+      <div className={`relative z-10 w-full max-w-5xl bg-black/90 backdrop-blur-xl border border-terminal-green/30 transition-all rounded-sm overflow-hidden ${
         isTakeoverActive ? 'takeover-shake border-glitch-red shadow-[0_0_30px_rgba(255,0,60,0.6)]' : 'glow-box'
       }`}>
         
@@ -458,7 +458,7 @@ function HijackAppContent() {
             isTakeoverActive ? 'border-glitch-red' : 'border-terminal-green/30'
           }`}>
             {/* Subtle gradient aura behind champion */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(57,255,20,0.04)_0%,_transparent_70%)]" />
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(57,255,20,0.04)_0%,_transparent_70%)]" />
             
             {/* Champion Badge */}
             <div className="relative inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 border border-gold/30 text-gold text-[10px] sm:text-[11px] font-bold tracking-widest uppercase glow-gold">
@@ -592,25 +592,25 @@ function HijackAppContent() {
       )}
 
       {/* ─── How It Works Strip ─── */}
-      <div className="relative z-10 w-full max-w-6xl mt-6 sm:mt-8">
+      <div className="relative z-10 w-full max-w-5xl mt-6 sm:mt-8">
         <div className="border border-white/[0.06] bg-black/60 backdrop-blur-sm p-4 sm:p-6">
           <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/30 text-center mb-4">How It Works</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-            <div className="flex items-start gap-3 text-center sm:text-left">
+            <div className="flex items-start gap-3 text-left">
               <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-terminal-green/30 bg-terminal-green/10 flex items-center justify-center text-terminal-green font-bold text-xs">1</div>
               <div>
                 <div className="text-xs sm:text-sm font-bold text-white/80">Pay to Hijack</div>
                 <div className="text-[10px] sm:text-xs text-white/30 leading-relaxed">Outbid the current champion with a higher bid.</div>
               </div>
             </div>
-            <div className="flex items-start gap-3 text-center sm:text-left">
+            <div className="flex items-start gap-3 text-left">
               <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-gold/30 bg-gold/10 flex items-center justify-center text-gold font-bold text-xs">2</div>
               <div>
                 <div className="text-xs sm:text-sm font-bold text-white/80">Claim the Throne</div>
                 <div className="text-[10px] sm:text-xs text-white/30 leading-relaxed">Your link goes live instantly for all visitors.</div>
               </div>
             </div>
-            <div className="flex items-start gap-3 text-center sm:text-left">
+            <div className="flex items-start gap-3 text-left">
               <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full border border-glitch-blue/30 bg-glitch-blue/10 flex items-center justify-center text-glitch-blue font-bold text-xs">3</div>
               <div>
                 <div className="text-xs sm:text-sm font-bold text-white/80">Reign Supreme</div>
@@ -622,7 +622,7 @@ function HijackAppContent() {
       </div>
 
       {/* ─── Footer ─── */}
-      <footer className="relative z-10 w-full max-w-6xl mt-6 py-6 text-center font-mono">
+      <footer className="relative z-10 w-full max-w-5xl mt-6 py-6 text-center font-mono">
         <div className="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-[10px] sm:text-xs text-white/25">
           <p>© {new Date().getFullYear()} HACKRANK.LOL</p>
           <span className="hidden sm:inline text-white/10">•</span>
