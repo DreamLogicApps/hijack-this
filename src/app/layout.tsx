@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     description: "The ultimate digital battleground where only one link reigns supreme.",
     images: ["https://hackrank.lol/og-image.png"],
   },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
