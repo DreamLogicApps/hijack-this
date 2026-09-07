@@ -376,7 +376,7 @@ function HijackAppContent() {
 
   const handleShareX = () => {
     if (!mainLink) return;
-    const text = encodeURIComponent(`🚨 SYSTEM OVERRIDE 🚨\n\n${mainLink.owner_name} just seized the #1 spot on HackRank for $${mainLink.hijack_price.toFixed(2)}! 👑💰\n\nThey are currently siphoning all the site traffic. Do you have what it takes to overthrow them? 🗡️💻\n\n#HackRank #KingOfTheHill`);
+    const text = encodeURIComponent(`🚨 The #1 spot on HackRank was just hijacked by ${mainLink.owner_name} for $${mainLink.hijack_price.toFixed(2)}!\n\nCan you overthrow them? 👑💻\n\n#HackRank`);
     const shareUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(window.location.href)}`;
     window.open(shareUrl, '_blank');
   };
