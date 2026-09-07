@@ -141,7 +141,7 @@ const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, o
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 text-white/30">
               <span className="w-1 h-1 bg-glitch-red animate-pulse rounded-full inline-block"></span>
-              {link.clicks || 0}
+              {link.clicks || 0} clicks
             </div>
             {link.owner_name !== 'System' && (
               <div className="flex items-center gap-1 text-glitch-blue/60">
