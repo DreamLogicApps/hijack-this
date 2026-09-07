@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: "HackRank",
     images: [
       {
-        url: "https://hackrank.lol/og-image.png",
+        url: "https://hackrank.lol/og-image.png?v=2",
         width: 1200,
         height: 630,
         alt: "HackRank.lol - Hijack the Top Spot",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "HackRank | Hijack The Top Spot",
     description: "The ultimate digital battleground where only one link reigns supreme.",
-    images: ["https://hackrank.lol/og-image.png"],
+    images: ["https://hackrank.lol/og-image.png?v=2"],
   },
   icons: {
     icon: "/icon.png",
