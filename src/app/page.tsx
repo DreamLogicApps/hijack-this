@@ -9,7 +9,7 @@ import { StatsHeader } from '@/components/StatsHeader';
 import { HistoryFeed, HistoryItem } from '@/components/HistoryFeed';
 import { CyberQRModal } from '@/components/CyberQRModal';
 import { MatrixRain } from '@/components/MatrixRain';
-import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, QrCode, Zap, Crown, ArrowRight, MousePointerClick } from 'lucide-react';
+import { Loader2, ExternalLink, Copy, Check, Flame, AlertTriangle, QrCode, Zap, Crown, ArrowRight, MousePointerClick, Clock } from 'lucide-react';
 
 interface LinkData {
   id: string;
@@ -70,6 +70,33 @@ const SLOT_TIERS: Record<string, { label: string; tier: string; borderClass: str
 
 const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, onHijack: () => void, onTrackClick?: () => void }) => {
   const config = SLOT_TIERS[link.slot_type || ''] || SLOT_TIERS.ad_left_3;
+  const [reignTime, setReignTime] = useState<string>('00:00:00');
+
+  useEffect(() => {
+    const calculateTime = () => {
+      if (!link.updated_at || link.owner_name === 'System') return;
+      const start = new Date(link.updated_at).getTime();
+      const now = new Date().getTime();
+      const diffMs = Math.max(0, now - start);
+
+      const seconds = Math.floor((diffMs / 1000) % 60);
+      const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+      const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      const pad = (n: number) => n.toString().padStart(2, '0');
+
+      if (days > 0) {
+        setReignTime(`${days}d ${pad(hours)}h ${pad(minutes)}m`);
+      } else {
+        setReignTime(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`);
+      }
+    };
+
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
+    return () => clearInterval(interval);
+  }, [link.updated_at, link.owner_name]);
   
   return (
     <div className={`${config.borderClass} ${config.bgClass} ${config.hoverBorderClass} border backdrop-blur-sm transition-all duration-300 group flex flex-col justify-between h-full relative overflow-hidden`}>
@@ -110,10 +137,18 @@ const SponsoredSlotCard = ({ link, onHijack, onTrackClick }: { link: LinkData, o
         </a>
         
         {/* Stats Row */}
-        <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono">
-          <div className="flex items-center gap-1 text-white/30">
-            <span className="w-1 h-1 bg-glitch-red animate-pulse rounded-full inline-block"></span>
-            {link.clicks || 0} clicks
+        <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono mt-1">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-white/30">
+              <span className="w-1 h-1 bg-glitch-red animate-pulse rounded-full inline-block"></span>
+              {link.clicks || 0}
+            </div>
+            {link.owner_name !== 'System' && (
+              <div className="flex items-center gap-1 text-glitch-blue/60">
+                <Clock className="w-2.5 h-2.5" />
+                {reignTime}
+              </div>
+            )}
           </div>
           <div className="text-gold font-bold">${link.hijack_price.toFixed(2)}</div>
         </div>
